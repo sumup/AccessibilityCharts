@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -14,6 +13,7 @@
             <option value="$PROJECT_DIR$/charts" />
             <option value="$PROJECT_DIR$/charts/axis" />
             <option value="$PROJECT_DIR$/charts/bar" />
+            <option value="$PROJECT_DIR$/charts/circle" />
             <option value="$PROJECT_DIR$/charts/line" />
           </set>
         </option>
