@@ -1,9 +1,10 @@
-package com.hackweeek.line
+package com.charts.line
 
 import androidx.compose.runtime.Composable
 import android.graphics.PointF
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,11 +19,15 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LinearChartScreen() {
+fun LinearChartScreen(
+    lineColor: Color = Color.Black,
+    backgroundColor: Color = Color.White,
+    data: List<Int>
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .fillMaxHeight()
             .padding(16.dp),
         elevation = 10.dp
     ) {
@@ -35,8 +40,10 @@ fun LinearChartScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                data = mockData(),
-                style = LinearChartStyle.Default
+                data = data,
+                style = LinearChartStyle.Default,
+                lineColor = lineColor,
+                backgroundColor = backgroundColor
             )
         }
     }
@@ -46,7 +53,9 @@ fun LinearChartScreen() {
 fun LinearChart(
     modifier: Modifier = Modifier,
     style: LinearChartStyle = LinearChartStyle.Default,
-    data: List<Int>
+    data: List<Int>,
+    lineColor: Color,
+    backgroundColor: Color
 ) {
     Canvas(modifier = modifier) {
         val distance = size.width / (data.size + 1)
@@ -68,7 +77,7 @@ fun LinearChart(
                 drawLine(
                     start = Offset(points[i].x, points[i].y),
                     end = Offset(points[i + 1].x, points[i + 1].y),
-                    color = Color(255, 0, 0),
+                    color = lineColor,
                     strokeWidth = 8f
                 )
             }
@@ -95,9 +104,7 @@ fun LinearChart(
                 )
             }
 
-            drawPath(path, color = Color(255, 0, 0), style = Stroke(width = 8f))
+            drawPath(path, color = lineColor, style = Stroke(width = 8f))
         }
     }
 }
-
-private fun mockData() = listOf(5, 6, 8, 5, 7, 6, 3, 5, 4, 7, 4, 5, 3, 7, 9, 12, 11, 5, 4, 5, 11, 8, 12, 10, 11, 7, 6, 4, 9, 7)
