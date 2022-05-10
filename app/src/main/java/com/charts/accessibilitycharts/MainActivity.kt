@@ -6,12 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
 import com.charts.accessibilitycharts.ui.theme.AccessibilityChartsTheme
 import com.charts.line.LinearChartScreen
 import androidx.compose.ui.unit.dp
 import com.charts.bar.BarChart
-import com.charts.circle.CircleChart
 import com.charts.circle.CircleChartScreen
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +24,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Column {
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
                         LinearChartScreen(data = mockData())
                         Spacer(modifier = Modifier.height(16.dp))
                         BarChart()
