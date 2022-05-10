@@ -13,7 +13,9 @@ import com.charts.accessibilitycharts.ui.theme.AccessibilityChartsTheme
 import com.charts.line.LinearChartScreen
 import androidx.compose.ui.unit.dp
 import com.charts.bar.BarChart
+import com.charts.circle.CircleChartData
 import com.charts.circle.CircleChartScreen
+import com.charts.circle.CircleData
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
                         LinearChartScreen(data = mockData())
                         Spacer(modifier = Modifier.height(16.dp))
                         BarChart()
-                        CircleChartScreen(valueA = 18f, valueB = 30f)
+                        CircleChartScreen(circleChartData = mockCircleData())
                     }
                 }
             }
@@ -38,5 +40,17 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun mockData() = listOf(5, 6, 8, 5, 7, 6, 3, 5, 4, 7, 4, 5, 3, 7, 9, 12, 11, 5, 4, 5, 11, 8, 12, 10, 11, 7, 6, 4, 9, 7)
+
+    private fun mockCircleData() = CircleChartData(
+        title = "Best x Least Seller",
+        circleA = CircleData(
+            title = "Cappuccino",
+            value = 40f
+        ),
+        circleB = CircleData(
+            title = "Garlic Bread",
+            value = 10f
+        )
+    )
 }
 
