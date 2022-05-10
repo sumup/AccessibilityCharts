@@ -27,7 +27,6 @@ fun LinearChartScreen(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
             .padding(16.dp),
         elevation = 10.dp
     ) {
