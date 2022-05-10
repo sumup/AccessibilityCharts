@@ -1,4 +1,4 @@
-package com.hackweeek.line
+package com.charts.line
 
 sealed class LinearChartStyle {
     object Default : LinearChartStyle()

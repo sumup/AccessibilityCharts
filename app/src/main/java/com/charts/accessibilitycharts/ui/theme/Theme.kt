@@ -1,4 +1,4 @@
-package com.hackweeek.accessibilitycharts.ui.theme
+package com.charts.accessibilitycharts.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

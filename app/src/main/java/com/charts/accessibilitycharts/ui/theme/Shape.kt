@@ -1,4 +1,4 @@
-package com.hackweeek.accessibilitycharts.ui.theme
+package com.charts.accessibilitycharts.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
