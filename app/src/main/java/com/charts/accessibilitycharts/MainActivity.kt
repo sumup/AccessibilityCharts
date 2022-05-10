@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
 import com.charts.accessibilitycharts.ui.theme.AccessibilityChartsTheme
 import com.charts.line.LinearChartScreen
+import androidx.compose.ui.unit.dp
+import com.charts.bar.BarChart
+import com.charts.circle.CircleChart
+import com.charts.circle.CircleChartScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +23,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LinearChartScreen(data = mockData())
+                    Column {
+                        LinearChartScreen(data = mockData())
+                        Spacer(modifier = Modifier.height(16.dp))
+                        BarChart()
+                        CircleChartScreen(valueA = 18f, valueB = 30f)
+                    }
                 }
             }
         }

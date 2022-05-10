@@ -17,4 +17,5 @@ rootProject.name = "AccessibilityCharts"
 include ':app'
 include ':charts'
 include ':charts:line'
+include ':charts:bar'
 include ':charts:circle'
