@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/charts" />
+            <option value="$PROJECT_DIR$/charts/circle" />
             <option value="$PROJECT_DIR$/charts/line" />
           </set>
         </option>
