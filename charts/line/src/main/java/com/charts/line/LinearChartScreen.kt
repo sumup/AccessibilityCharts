@@ -2,7 +2,6 @@ package com.charts.line
 
 import androidx.compose.runtime.Composable
 import android.graphics.PointF
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,11 +13,15 @@ import androidx.compose.material.Card
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
+import com.charts.axis.*
 import com.charts.line.LinearChartStyle.*
 
 @Composable
@@ -56,29 +59,98 @@ fun LinearChart(
     style: LinearChartStyle = Default,
     data: List<Int>,
     lineColor: Color,
-    backgroundColor: Color
+    backgroundColor: Color,
+    xAxis: XAxis = DefaultXAxis(),
+    yAxis: YAxis = DefaultYAxis(),
+    horizontalOffset: Float = 5f
 ) {
     Canvas(modifier = modifier) {
         val distance = size.width / (data.size + 1)
         var currentX = 0F
         val maxValue = data.maxOrNull() ?: 0
+        val minValue = 0
         val points = mutableListOf<PointF>()
 
         data.forEachIndexed { index, currentData ->
             if (data.size >= index + 2) {
-                val y0 = (maxValue - currentData) * (size.height / maxValue)
-                val x0 = currentX + distance
-                points.add(PointF(x0, y0))
+                val y = (maxValue - currentData) * (size.height / maxValue)
+                val x = currentX + distance
+                points.add(PointF(x, y))
                 currentX += distance
             }
         }
 
-        if (style == Default) {
-            drawDefaultLineChart(points, lineColor)
-        } else {
-            drawSmoothLineChart(points, lineColor)
+        drawIntoCanvas { canvas ->
+            val yAxisDrawableArea = calculateYAxisDrawableArea(
+                xAxisLabelSize = xAxis.height(this),
+                size = size
+            )
+            val xAxisDrawableArea = calculateXAxisDrawableArea(
+                yAxisWidth = yAxisDrawableArea.width,
+                labelHeight = xAxis.height(this),
+                size = size
+            )
+            val xAxisLabelsDrawableArea = calculateXAxisLabelsDrawableArea(
+                xAxisDrawableArea = xAxisDrawableArea,
+                offset = horizontalOffset
+            )
+            val chartDrawableArea = calculateDrawableArea(
+                xAxisDrawableArea = xAxisDrawableArea,
+                yAxisDrawableArea = yAxisDrawableArea,
+                size = size,
+                offset = horizontalOffset
+            )
+
+            if (style == Default) {
+                drawDefaultLineChart(points, lineColor)
+            } else {
+                drawSmoothLineChart(points, lineColor)
+            }
+
+            drawXAndYAxis(xAxis, yAxis,
+                xAxisDrawableArea, yAxisDrawableArea,
+                xAxisLabelsDrawableArea,
+                maxValue, minValue,
+                canvas)
         }
     }
+}
+
+private fun DrawScope.drawXAndYAxis(xAxis: XAxis, yAxis: YAxis,
+                                    xAxisDrawableArea: Rect,
+                                    yAxisDrawableArea: Rect,
+                                    xAxisDrawableLabelArea: Rect,
+                                    maxValue: Int,
+                                    minValue: Int,
+                                    canvas: Canvas) {
+    // Draw the X Axis line.
+    xAxis.drawAxisLine(
+        drawScope = this,
+        drawableArea = xAxisDrawableArea,
+        canvas = canvas
+    )
+
+    xAxis.drawAxisLabels(
+        drawScope = this,
+        canvas = canvas,
+        drawableArea = xAxisDrawableLabelArea,
+        labels = listOf("S", "M", "T", "W", "T", "F", "S")
+    )
+
+    // Draw the Y Axis line.
+    yAxis.drawAxisLine(
+        drawScope = this,
+        canvas = canvas,
+        drawableArea = yAxisDrawableArea
+    )
+
+    yAxis.drawAxisLabels(
+        drawScope = this,
+        canvas = canvas,
+        drawableArea = yAxisDrawableArea,
+        minValue = minValue.toFloat(),
+        maxValue = maxValue.toFloat()
+    )
 }
 
 private fun DrawScope.drawSmoothLineChart(

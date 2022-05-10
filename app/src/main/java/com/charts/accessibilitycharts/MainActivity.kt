@@ -31,6 +31,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun mockData() = listOf(5, 6, 8, 5, 7, 6, 3, 5, 4, 7, 4, 5, 3, 7, 9, 12, 11, 5, 4, 5, 11, 8, 12, 10, 11, 7, 6, 4, 9, 7)
+    private fun mockData() = listOf(5, 8, 9, 12, 3, 6, 2, 10, 5, 3, 6)
 }
 
