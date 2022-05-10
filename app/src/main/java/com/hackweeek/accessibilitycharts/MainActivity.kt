@@ -7,8 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
-import com.hackweeek.accessibilitycharts.linearchart.LinearChartScreen
 import com.hackweeek.accessibilitycharts.ui.theme.AccessibilityChartsTheme
+import com.hackweeek.line.LinearChartScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

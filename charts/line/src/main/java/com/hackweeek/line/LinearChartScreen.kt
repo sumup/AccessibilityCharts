@@ -1,4 +1,4 @@
-package com.hackweeek.accessibilitycharts.linearchart
+package com.hackweeek.line
 
 import androidx.compose.runtime.Composable
 import android.graphics.PointF

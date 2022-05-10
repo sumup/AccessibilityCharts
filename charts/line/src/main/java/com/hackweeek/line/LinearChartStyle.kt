@@ -1,4 +1,4 @@
-package com.hackweeek.accessibilitycharts.linearchart
+package com.hackweeek.line
 
 sealed class LinearChartStyle {
     object Default : LinearChartStyle()
