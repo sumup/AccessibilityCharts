@@ -29,7 +29,7 @@ fun LinearChartScreen(
 ) {
     Card(
         modifier = Modifier
-            .height(100.dp)
+            .height(200.dp)
             .fillMaxWidth()
             .padding(16.dp),
         elevation = 10.dp
@@ -40,7 +40,7 @@ fun LinearChartScreen(
                 .wrapContentSize(align = Alignment.TopStart)
         ) {
             LinearChart(
-                modifier = Modifier.height(100.dp).fillMaxWidth(),
+                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                 data = data,
                 style = Default,
                 lineColor = lineColor,
@@ -59,13 +59,9 @@ fun LinearChart(
     backgroundColor: Color
 ) {
     Canvas(modifier = modifier) {
-        Log.d("HSS","The size is $size")
         val distance = size.width / (data.size + 1)
         var currentX = 0F
         val maxValue = data.maxOrNull() ?: 0
-
-        Log.d("HSS","The max value is $maxValue")
-
         val points = mutableListOf<PointF>()
 
         data.forEachIndexed { index, currentData ->
