@@ -40,17 +40,11 @@ fun CircleChartScreen(
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .wrapContentSize(align = Alignment.TopCenter)
-        ) {
-            CircleChart(
-                lineColor = lineColor,
-                fillColor = fillColor,
-                circleChartData = circleChartData
-            )
-        }
+        CircleChart(
+            lineColor = lineColor,
+            fillColor = fillColor,
+            circleChartData = circleChartData
+        )
     }
 }
 
@@ -64,7 +58,7 @@ fun CircleChart(
     var isHeartVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    Column {
+    Column(Modifier.padding(16.dp)) {
         Row {
             Text(
                 modifier = Modifier.weight(1f),
@@ -90,7 +84,6 @@ fun CircleChart(
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(top = 32.dp)
             ) {
                 Text(
                     text = circleChartData.largeCircle().title,
@@ -120,8 +113,7 @@ fun CircleChart(
                 modifier = Modifier
                     .fillMaxWidth()
                     .rotate(-45f)
-                    .wrapContentSize(Alignment.Center)
-                    .align(Alignment.Center),
+                    .padding(top = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Circle(
@@ -148,13 +140,13 @@ fun CircleChart(
                 )
             }
             Column(
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier.align(Alignment.BottomEnd).padding(top = 232.dp)
             ) {
                 Text(
                     text = circleChartData.smallCircle().title,
                     fontSize = 16.sp,
                     color = Color.Black,
-                    modifier = Modifier.padding(top = 280.dp)
+                    modifier = Modifier
                 )
                 Row {
                     Text(
