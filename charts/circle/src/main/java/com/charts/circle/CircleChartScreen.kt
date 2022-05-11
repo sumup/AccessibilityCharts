@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -67,23 +68,24 @@ fun CircleChart(
     Column {
         Row {
             Text(
-                modifier = Modifier.fillMaxWidth(fraction = 0.95f),
+                modifier = Modifier.weight(1f),
                 text = circleChartData.title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-            Image(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                        Toast
-                            .makeText(context, "play na musica", Toast.LENGTH_SHORT)
-                            .show()
-                    },
-                painter = painterResource(id = R.drawable.ic_music),
-                contentDescription = ""
-            )
+            IconButton(
+                onClick = {
+                    Toast
+                        .makeText(context, "play na musica", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_music),
+                    contentDescription = null
+                )
+            }
         }
         Box {
             Column(
