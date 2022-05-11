@@ -2,10 +2,8 @@ package com.charts.circle
 
 import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -105,21 +104,16 @@ fun CircleChart(
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-                    AnimatedVisibility(
-                        visible = isHeartVisible,
-                        enter = fadeIn(
-                            initialAlpha = 0.3f
-                        ),
-                        exit = fadeOut(
-                            animationSpec = tween(durationMillis = 250)
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_heart),
-                            contentDescription = "",
-                            Modifier.padding(top = 16.dp)
-                        )
-                    }
+
+                    val alpha by animateFloatAsState(
+                        animationSpec = tween(durationMillis = 250),
+                        targetValue = if (isHeartVisible) 1f else 0f
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_heart),
+                        contentDescription = "",
+                        Modifier.padding(top = 16.dp).alpha(alpha)
+                    )
                 }
             }
             Column(
@@ -135,8 +129,10 @@ fun CircleChart(
                     fillColor = lineColor,
                     ratio = circleChartData.largeRatio(),
                     backgroundRes = circleChartData.largeCircle().backgroundRes,
+                    isVisible = isHeartVisible,
                     onClick = {
                         isHeartVisible = isHeartVisible.not()
+                        isBrokenHeartVisible = false
                     }
                 )
                 Circle(
@@ -144,8 +140,10 @@ fun CircleChart(
                     fillColor = fillColor,
                     ratio = circleChartData.smallRatio(),
                     backgroundRes = circleChartData.smallCircle().backgroundRes,
+                    isVisible = isBrokenHeartVisible,
                     onClick = {
                         isBrokenHeartVisible = isBrokenHeartVisible.not()
+                        isHeartVisible = false
                     }
                 )
             }
@@ -165,21 +163,16 @@ fun CircleChart(
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-                    AnimatedVisibility(
-                        visible = isBrokenHeartVisible,
-                        enter = fadeIn(
-                            initialAlpha = 0.3f
-                        ),
-                        exit = fadeOut(
-                            animationSpec = tween(durationMillis = 250)
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_broken_heart),
-                            contentDescription = "",
-                            Modifier.padding(top = 12.dp)
-                        )
-                    }
+
+                    val alpha by animateFloatAsState(
+                        animationSpec = tween(durationMillis = 250),
+                        targetValue = if (isBrokenHeartVisible) 1f else 0f
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_broken_heart),
+                        contentDescription = "",
+                        Modifier.padding(top = 12.dp).alpha(alpha)
+                    )
                 }
             }
         }
@@ -191,10 +184,14 @@ fun Circle(
     lineColor: Color,
     fillColor: Color,
     ratio: Float,
+    isVisible: Boolean,
     @DrawableRes backgroundRes: Int,
     onClick: () -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
+    val alpha by animateFloatAsState(
+        animationSpec = tween(durationMillis = 250),
+        targetValue = if (isVisible) 1f else 0f
+    )
 
     Box(
         modifier = Modifier
@@ -207,20 +204,13 @@ fun Circle(
             )
             .background(fillColor)
             .clickable {
-                visible = visible.not()
                 onClick.invoke()
             }
     ) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(
-                initialAlpha = 0.3f
-            ),
-            exit = fadeOut(
-                animationSpec = tween(durationMillis = 250)
-            )
-        ) {
-            Image(painter = painterResource(id = backgroundRes), contentDescription = "Yay")
-        }
+        Image(
+            painter = painterResource(id = backgroundRes),
+            contentDescription = "Yay",
+            modifier = Modifier.alpha(alpha)
+        )
     }
 }
