@@ -1,22 +1,16 @@
 package com.charts.bar
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -24,6 +18,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.absoluteValue
@@ -40,7 +35,9 @@ fun BarChartScreen(
         backgroundColor = backgroundColor
     ) {
         Column {
-            Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
+            Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp).semantics {
+                contentDescription = "Graph of total sales, total value of 20.000,00 €. From January 1, 2022 to January 8, 2022"
+            }) {
                 Column(Modifier.weight(1f)) {
                     Text(
                         text = "Total Sales",
@@ -68,7 +65,7 @@ fun BarChartScreen(
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_vector),
-                        contentDescription = null
+                        contentDescription = "Play the sound of the total sales graph"
                     )
                 }
             }
@@ -149,16 +146,13 @@ fun BarChart(
             }
         }
 
-        AnimatedVisibility(visible = index >= 0, modifier = Modifier.align(Alignment.TopStart)) {
-            BarTooltip(
-                title = tooltipTitle,
-                value = tooltipValue,
-                index = index,
-                modifier = Modifier.onFocusChanged {
-
-                }
-            )
-        }
+        BarTooltip(
+            title = tooltipTitle,
+            value = tooltipValue,
+            index = index,
+            visible = index >= 0,
+            onDismissRequest = { index = -1 }
+        )
     }
 }
 
@@ -215,15 +209,20 @@ fun BarTooltip(
     title: String,
     value: String,
     index: Int,
-    modifier: Modifier = Modifier
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit
 ) {
-    Card(
-        modifier
+    DropdownMenu(
+        expanded = visible,
+        onDismissRequest = { onDismissRequest() },
+        offset = DpOffset(x = (index.absoluteValue * 32).dp, y = 0.dp),
+        modifier = modifier
             .wrapContentSize()
-            .padding(start = (index.absoluteValue * 24).dp)
-            .clearAndSetSemantics { contentDescription = "teste" }
-            .clickable { },
-        border = BorderStroke(width = 1.dp, color = Color.Black)
+            .clearAndSetSemantics { contentDescription = "Sales on $title. Value of $value. Double tap to close." }
+            .clickable {
+                onDismissRequest()
+            }
     ) {
         Column(
             Modifier
@@ -244,7 +243,6 @@ fun BarTooltip(
             )
         }
     }
-
 }
 
 @Preview
