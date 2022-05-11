@@ -2,7 +2,6 @@ package com.charts.line
 
 import androidx.compose.runtime.Composable
 import android.graphics.PointF
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -32,7 +31,8 @@ fun LinearChartScreen(
             .height(200.dp)
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = 10.dp
+        elevation = 10.dp,
+        backgroundColor = backgroundColor
     ) {
         Column(
             modifier = Modifier
@@ -43,8 +43,7 @@ fun LinearChartScreen(
                 modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                 data = data,
                 style = Default,
-                lineColor = lineColor,
-                backgroundColor = backgroundColor
+                lineColor = lineColor
             )
         }
     }
@@ -55,8 +54,7 @@ fun LinearChart(
     modifier: Modifier = Modifier,
     style: LinearChartStyle = Default,
     data: List<Int>,
-    lineColor: Color,
-    backgroundColor: Color
+    lineColor: Color
 ) {
     Canvas(modifier = modifier) {
         val distance = size.width / (data.size + 1)

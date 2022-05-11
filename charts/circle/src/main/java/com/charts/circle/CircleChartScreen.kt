@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,8 +51,8 @@ fun CircleChartScreen(
 
 @Composable
 fun CircleChart(
-    lineColor: Color = Color.Black,
-    fillColor: Color = Color.White,
+    lineColor: Color,
+    fillColor: Color,
     circleChartData: CircleChartData
 ) {
     var isBrokenHeartVisible by remember { mutableStateOf(false) }

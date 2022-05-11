@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.charts.accessibilitycharts.ui.theme.AccessibilityChartsTheme
 import com.charts.bar.BarChartScreen
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
             AccessibilityChartsTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = Color.White
                 ) {
                     Column(
                         modifier = Modifier.verticalScroll(rememberScrollState())
