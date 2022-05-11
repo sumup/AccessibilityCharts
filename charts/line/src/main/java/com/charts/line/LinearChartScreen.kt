@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
 import com.charts.axis.*
-import com.charts.line.LinearChartStyle.*
 
 @Composable
 fun LinearChartScreen(
@@ -45,7 +44,6 @@ fun LinearChartScreen(
             LinearChart(
                 modifier = Modifier.fillMaxHeight().fillMaxWidth(),
                 data = data,
-                style = Default,
                 lineColor = lineColor,
                 backgroundColor = backgroundColor
             )
@@ -56,7 +54,6 @@ fun LinearChartScreen(
 @Composable
 fun LinearChart(
     modifier: Modifier = Modifier,
-    style: LinearChartStyle = Default,
     data: List<Int>,
     lineColor: Color,
     backgroundColor: Color,
@@ -65,14 +62,14 @@ fun LinearChart(
     horizontalOffset: Float = 5f
 ) {
     Canvas(modifier = modifier) {
-        val distance = size.width / (data.size + 1)
+        val distance = size.width / data.size
         var currentX = 0F
         val maxValue = data.maxOrNull() ?: 0
         val minValue = 0
         val points = mutableListOf<PointF>()
 
         data.forEachIndexed { index, currentData ->
-            if (data.size >= index + 2) {
+            if (data.size >= index + 1) {
                 val y = (maxValue - currentData) * (size.height / maxValue)
                 val x = currentX + distance
                 points.add(PointF(x, y))
@@ -101,11 +98,7 @@ fun LinearChart(
                 offset = horizontalOffset
             )
 
-            if (style == Default) {
-                drawDefaultLineChart(points, lineColor)
-            } else {
-                drawSmoothLineChart(points, lineColor)
-            }
+            drawDefaultLineChart(points, lineColor)
 
             drawXAndYAxis(xAxis, yAxis,
                 xAxisDrawableArea, yAxisDrawableArea,

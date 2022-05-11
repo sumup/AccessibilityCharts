@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                         LinearChartScreen(data = mockData())
                         Spacer(modifier = Modifier.height(16.dp))
                         BarChart()
+                        Spacer(modifier = Modifier.height(16.dp))
                         CircleChartScreen(circleChartData = mockCircleData())
                     }
                 }
@@ -39,7 +40,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun mockData() = listOf(5, 8, 9, 12, 3, 6, 2, 10, 5, 3, 6)
+    private fun mockData() = listOf(5, 8, 9, 12, 3, 6, 2)
 
     private fun mockCircleData() = CircleChartData(
         title = "Best x Least Seller",
