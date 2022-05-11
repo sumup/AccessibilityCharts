@@ -42,7 +42,8 @@ fun CircleChartScreen(
             .fillMaxWidth()
             .padding(16.dp)
             .semantics {
-                contentDescription = "Gráfico best x least seller"
+                contentDescription =
+                    "Best Sellers vs Least Sellers Circular Chart for January 7, 2022."
             },
         elevation = 10.dp,
         backgroundColor = backgroundColor
@@ -91,7 +92,7 @@ fun CircleChart(
                         .show()
                 },
                 Modifier.semantics {
-                    contentDescription = "Botão de tocar música"
+                    contentDescription = "Play the sound of the best and least sold."
                 }
             ) {
                 Image(
@@ -103,7 +104,7 @@ fun CircleChart(
         Box(
             modifier = Modifier.semantics(mergeDescendants = true) {
                 contentDescription =
-                    "Descrição do gráfico: O círculo maior em cor preta repesenta o produto mais vendido, o cappuccino, sendo 40 unidades vendidas. O círculo menor em cor branca e borda preta representa o menos vendido, o pão de alho, sendo 8 unidades vendidas."
+                    "The larger circle in black represents the most sold product, Cappuccino, with 40 units sold. The smaller circle in white color and black border represents the least sold product, garlic bread, with 8 units sold."
             }
         ) {
             Column(
