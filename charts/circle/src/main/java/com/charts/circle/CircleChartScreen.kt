@@ -229,10 +229,12 @@ fun Circle(
             )
             .background(fillColor)
             .clearAndSetSemantics { }
-            .clickable {
-                if (context.isAccessibilityEnabled().not()) {
-                    onClick.invoke()
-                }
+            .clickable(
+                enabled = context
+                    .isAccessibilityEnabled()
+                    .not()
+            ) {
+                onClick.invoke()
             }
     ) {
         Image(
