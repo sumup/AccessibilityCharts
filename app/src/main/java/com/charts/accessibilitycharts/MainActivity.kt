@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun mockData() = listOf(5, 8, 9, 12, 3, 6, 2)
+    private fun mockData() = listOf(0, 2500, 2500, 7500, 4000, 4000, 0)
 
     private fun mockCircleData() = CircleChartData(
         title = "Best x Least Seller",

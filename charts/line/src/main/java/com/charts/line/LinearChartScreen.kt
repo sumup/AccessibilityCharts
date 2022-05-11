@@ -3,13 +3,11 @@ package com.charts.line
 import androidx.compose.runtime.Composable
 import android.graphics.PointF
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -18,7 +16,10 @@ import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.charts.axis.*
 
 @Composable
@@ -29,7 +30,6 @@ fun LinearChartScreen(
 ) {
     Card(
         modifier = Modifier
-            .height(200.dp)
             .fillMaxWidth()
             .padding(16.dp),
         elevation = 10.dp,
@@ -40,8 +40,40 @@ fun LinearChartScreen(
                 .padding(16.dp)
                 .wrapContentSize(align = Alignment.TopStart)
         ) {
+            Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        text = "Sales by hour",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                    )
+
+                    Text(
+                        text = "7.000,00 €",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                    )
+
+                    Text(
+                        text = "7, January 2022",
+                        fontSize = 14.sp,
+                        color = Color(0xFF999999),
+                    )
+                }
+
+                IconButton(
+                    onClick = { /*TODO*/ }
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_vector),
+                        contentDescription = null)
+                }
+            }
+
             LinearChart(
-                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                modifier = Modifier.height(170.dp).fillMaxWidth(),
                 data = data,
                 lineColor = lineColor,
                 backgroundColor = backgroundColor
@@ -125,7 +157,7 @@ private fun DrawScope.drawXAxis(xAxis: XAxis,
         drawScope = this,
         canvas = canvas,
         drawableArea = xAxisDrawableLabelArea,
-        labels = listOf("S", "M", "T", "W", "T", "F", "S")
+        labels = listOf("00", "04", "08", "12", "16", "20", "")
     )
 }
 
@@ -156,8 +188,8 @@ private fun DrawScope.drawLineChart(
 ) {
     for (i in 0 until points.size - 1) {
         drawLine(
-            start = Offset(points[i].x - 100, points[i].y),
-            end = Offset(points[i + 1].x - 100, points[i + 1].y),
+            start = Offset(points[i].x - 100, points[i].y - 40),
+            end = Offset(points[i + 1].x - 100, points[i + 1].y - 40),
             color = lineColor,
             strokeWidth = 8f
         )
