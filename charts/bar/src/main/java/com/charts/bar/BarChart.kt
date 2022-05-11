@@ -19,8 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -101,8 +101,7 @@ fun BarChart(
     ) {
         Row(
             Modifier
-                .align(Alignment.Center)
-                .clearAndSetSemantics { },
+                .align(Alignment.Center),
             verticalAlignment = Alignment.Bottom
         ) {
             Bar("M", "Monday", maxValue, height, values[0], index == 0) {
@@ -152,7 +151,7 @@ fun BarChart(
             BarTooltip(
                 title = tooltipTitle,
                 value = tooltipValue,
-                index = index
+                index = index,
             )
         }
     }
@@ -173,7 +172,7 @@ fun Bar(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .semantics {
-                stateDescription = "$fullText, $value"
+                contentDescription = "$fullText sales. Double click to open for more info."
             }
             .clickable {
                 onSelected()
@@ -202,7 +201,7 @@ fun Bar(
         }
 
         Spacer(Modifier.height(16.dp))
-        Text(text = text, color = Color.Black)
+        Text(text = text, color = Color.Black, modifier = Modifier.clearAndSetSemantics {  })
     }
 }
 
