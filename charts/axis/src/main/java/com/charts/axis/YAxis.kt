@@ -82,7 +82,7 @@ class DefaultYAxis(
     ) = with(drawScope) {
         val labelPaint = textPaint.apply {
             textSize = labelTextSize.toPx()
-            textAlign = android.graphics.Paint.Align.RIGHT
+            textAlign = android.graphics.Paint.Align.LEFT
         }
         val minLabelHeight = (labelTextSize.toPx() * labelRatio.toFloat())
         val totalHeight = drawableArea.height

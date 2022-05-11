@@ -9,8 +9,8 @@ fun Density.calculateYAxisDrawableArea(
     xAxisLabelSize: Float,
     size: Size
 ): Rect {
-    // Either 50dp or 10% of the chart width.
-    val right = minOf(50.dp.toPx(), size.width * 10f / 100f)
+    // Either 400dp or 90% of the chart width.
+    val right = minOf(400.dp.toPx(), size.width * 90f / 100f)
 
     return Rect(
         left = 0f,
@@ -28,10 +28,24 @@ fun calculateXAxisDrawableArea(
     val top = size.height - labelHeight
 
     return Rect(
-        left = yAxisWidth,
+        left = 0.0f,
         top = top,
         bottom = size.height,
-        right = size.width
+        right = size.width - (labelHeight * 2) - 8
+    )
+}
+
+fun calculateYAxisLabelsDrawableArea(
+    yAxisDrawableArea: Rect,
+    offset: Float
+): Rect {
+    val verticalOffset = yAxisDrawableArea.width * offset / 100f
+
+    return Rect(
+        left = yAxisDrawableArea.left + verticalOffset,
+        top = yAxisDrawableArea.top,
+        bottom = yAxisDrawableArea.bottom,
+        right = yAxisDrawableArea.right - verticalOffset
     )
 }
 

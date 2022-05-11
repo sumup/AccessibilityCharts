@@ -46,7 +46,7 @@ class DefaultXAxis(
     }
 
     override fun height(drawScope: DrawScope): Float = with(drawScope) {
-        (3f / 2f) * axisLineThickness.toPx()
+        (30f / 2f) * axisLineThickness.toPx()
     }
 
     override fun drawAxisLine(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect) =

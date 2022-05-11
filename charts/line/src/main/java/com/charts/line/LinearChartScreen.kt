@@ -16,9 +16,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
 import com.charts.axis.*
@@ -59,7 +59,8 @@ fun LinearChart(
     backgroundColor: Color,
     xAxis: XAxis = DefaultXAxis(),
     yAxis: YAxis = DefaultYAxis(),
-    horizontalOffset: Float = 5f
+    horizontalOffset: Float = 5f,
+    verticalOffset: Float = -5f
 ) {
     Canvas(modifier = modifier) {
         val distance = size.width / data.size
@@ -82,6 +83,7 @@ fun LinearChart(
                 xAxisLabelSize = xAxis.height(this),
                 size = size
             )
+
             val xAxisDrawableArea = calculateXAxisDrawableArea(
                 yAxisWidth = yAxisDrawableArea.width,
                 labelHeight = xAxis.height(this),
@@ -91,6 +93,10 @@ fun LinearChart(
                 xAxisDrawableArea = xAxisDrawableArea,
                 offset = horizontalOffset
             )
+            val yAxisLabelsDrawableArea = calculateYAxisLabelsDrawableArea(
+                yAxisDrawableArea = yAxisDrawableArea,
+                offset = verticalOffset
+            )
             val chartDrawableArea = calculateDrawableArea(
                 xAxisDrawableArea = xAxisDrawableArea,
                 yAxisDrawableArea = yAxisDrawableArea,
@@ -98,25 +104,18 @@ fun LinearChart(
                 offset = horizontalOffset
             )
 
-            drawDefaultLineChart(points, lineColor)
+            drawLineChart(points, lineColor, chartDrawableArea, canvas)
 
-            drawXAndYAxis(xAxis, yAxis,
-                xAxisDrawableArea, yAxisDrawableArea,
-                xAxisLabelsDrawableArea,
-                maxValue, minValue,
-                canvas)
+            drawXAxis(xAxis, xAxisDrawableArea, xAxisLabelsDrawableArea, canvas)
+            drawYAxis(yAxis, yAxisDrawableArea, yAxisLabelsDrawableArea, minValue, maxValue, canvas)
         }
     }
 }
 
-private fun DrawScope.drawXAndYAxis(xAxis: XAxis, yAxis: YAxis,
-                                    xAxisDrawableArea: Rect,
-                                    yAxisDrawableArea: Rect,
-                                    xAxisDrawableLabelArea: Rect,
-                                    maxValue: Int,
-                                    minValue: Int,
-                                    canvas: Canvas) {
-    // Draw the X Axis line.
+private fun DrawScope.drawXAxis(xAxis: XAxis,
+                                     xAxisDrawableArea: Rect,
+                                     xAxisDrawableLabelArea: Rect,
+                                     canvas: Canvas) {
     xAxis.drawAxisLine(
         drawScope = this,
         drawableArea = xAxisDrawableArea,
@@ -129,8 +128,14 @@ private fun DrawScope.drawXAndYAxis(xAxis: XAxis, yAxis: YAxis,
         drawableArea = xAxisDrawableLabelArea,
         labels = listOf("S", "M", "T", "W", "T", "F", "S")
     )
+}
 
-    // Draw the Y Axis line.
+private fun DrawScope.drawYAxis(yAxis: YAxis,
+                                yAxisDrawableArea: Rect,
+                                yAxisDrawableLabelArea: Rect,
+                                minValue: Int,
+                                maxValue: Int,
+                                canvas: Canvas) {
     yAxis.drawAxisLine(
         drawScope = this,
         canvas = canvas,
@@ -140,49 +145,42 @@ private fun DrawScope.drawXAndYAxis(xAxis: XAxis, yAxis: YAxis,
     yAxis.drawAxisLabels(
         drawScope = this,
         canvas = canvas,
-        drawableArea = yAxisDrawableArea,
+        drawableArea = yAxisDrawableLabelArea,
         minValue = minValue.toFloat(),
         maxValue = maxValue.toFloat()
     )
 }
 
-private fun DrawScope.drawSmoothLineChart(
+private fun DrawScope.drawLineChart(
     points: MutableList<PointF>,
-    lineColor: Color
+    lineColor: Color,
+    drawableArea: Rect,
+    canvas: Canvas
 ) {
-    val cubicPoints1 = mutableListOf<PointF>()
-    val cubicPoints2 = mutableListOf<PointF>()
 
-    for (i in 1 until points.size) {
-        cubicPoints1.add(PointF((points[i].x + points[i - 1].x) / 2, points[i - 1].y))
-        cubicPoints2.add(PointF((points[i].x + points[i - 1].x) / 2, points[i].y))
+    val axisLinePaint = Paint().apply {
+        isAntiAlias = true
+        color = lineColor
+        style = PaintingStyle.Stroke
+        strokeWidth = 8f
     }
 
-    val path = Path()
-    path.moveTo(points.first().x, points.first().y)
-
-    for (i in 1 until points.size) {
-        path.cubicTo(
-            cubicPoints1[i - 1].x,
-            cubicPoints1[i - 1].y,
-            cubicPoints2[i - 1].x,
-            cubicPoints2[i - 1].y,
-            points[i].x,
-            points[i].y
-        )
-    }
-
-    drawPath(path, color = lineColor, style = Stroke(width = 8f))
-}
-
-private fun DrawScope.drawDefaultLineChart(
-    points: MutableList<PointF>,
-    lineColor: Color
-) {
     for (i in 0 until points.size - 1) {
+//        canvas.drawLine(
+//            p1 = Offset(
+//                x = drawableArea.left - points[i].x,
+//                y = drawableArea.left - points[i].y
+//            ),
+//            p2 = Offset(
+//                x = points[i + 1].x,
+//                y = points[i + 1].y
+//            ),
+//            paint = axisLinePaint
+//        )
+
         drawLine(
-            start = Offset(points[i].x, points[i].y),
-            end = Offset(points[i + 1].x, points[i + 1].y),
+            start = Offset(points[i].x - 100, points[i].y),
+            end = Offset(points[i + 1].x - 100, points[i + 1].y),
             color = lineColor,
             strokeWidth = 8f
         )
