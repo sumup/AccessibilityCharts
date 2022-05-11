@@ -21,8 +21,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +39,10 @@ fun CircleChartScreen(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .semantics {
+                contentDescription = "Gráfico best x least seller"
+            },
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
@@ -62,7 +67,8 @@ fun CircleChart(
     Column(Modifier.padding(16.dp)) {
         Row {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f),
                 text = circleChartData.title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -73,6 +79,9 @@ fun CircleChart(
                     Toast
                         .makeText(context, "play na musica", Toast.LENGTH_SHORT)
                         .show()
+                },
+                Modifier.semantics {
+                    contentDescription = "Botão de tocar música"
                 }
             ) {
                 Image(
@@ -81,10 +90,15 @@ fun CircleChart(
                 )
             }
         }
-        Box {
+        Box(
+            modifier = Modifier.semantics(mergeDescendants = true) {
+                contentDescription = "Descrição do gráfico: O círculo maior em cor preta repesenta o produto mais vendido, o cappuccino, sendo 40 unidades vendidas. O círculo menor em cor branca e borda preta representa o menos vendido, o pão de alho, sendo 8 unidades vendidas."
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
+                    .clearAndSetSemantics { }
             ) {
                 Text(
                     text = circleChartData.largeCircle().title,
@@ -105,8 +119,10 @@ fun CircleChart(
                     )
                     Image(
                         painter = painterResource(id = R.drawable.ic_heart),
-                        contentDescription = "",
-                        Modifier.padding(top = 16.dp).alpha(alpha)
+                        contentDescription = null,
+                        Modifier
+                            .padding(top = 16.dp)
+                            .alpha(alpha)
                     )
                 }
             }
@@ -141,15 +157,17 @@ fun CircleChart(
                 )
             }
             Column(
-                modifier = Modifier.align(Alignment.BottomEnd).padding(top = 232.dp)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(top = 232.dp)
+                    .clearAndSetSemantics { }
             ) {
                 Text(
                     text = circleChartData.smallCircle().title,
                     fontSize = 16.sp,
-                    color = Color.Black,
-                    modifier = Modifier
+                    color = Color.Black
                 )
-                Row {
+                Row{
                     Text(
                         text = circleChartData.smallCircle().value.toInt().toString(),
                         fontSize = 48.sp,
@@ -163,8 +181,10 @@ fun CircleChart(
                     )
                     Image(
                         painter = painterResource(id = R.drawable.ic_broken_heart),
-                        contentDescription = "",
-                        Modifier.padding(top = 12.dp).alpha(alpha)
+                        contentDescription = null,
+                        Modifier
+                            .padding(top = 12.dp)
+                            .alpha(alpha)
                     )
                 }
             }
@@ -196,13 +216,14 @@ fun Circle(
                 shape = CircleShape
             )
             .background(fillColor)
+            .clearAndSetSemantics {  }
             .clickable {
                 onClick.invoke()
             }
     ) {
         Image(
             painter = painterResource(id = backgroundRes),
-            contentDescription = "Yay",
+            contentDescription = null,
             modifier = Modifier.alpha(alpha)
         )
     }
