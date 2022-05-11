@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.charts.accessibilitycharts.ui.theme.AccessibilityChartsTheme
 import com.charts.bar.BarChartScreen
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
             AccessibilityChartsTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = Color.White
                 ) {
                     Column(
                         modifier = Modifier.verticalScroll(rememberScrollState())
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
                         LinearChartScreen(data = mockData())
                         Spacer(modifier = Modifier.height(16.dp))
                         BarChartScreen()
+                        Spacer(modifier = Modifier.height(16.dp))
                         CircleChartScreen(circleChartData = mockCircleData())
                     }
                 }
@@ -42,7 +44,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun mockData() = listOf(5, 6, 8, 5, 7, 6, 3, 5, 4, 7, 4, 5, 3, 7, 9, 12, 11, 5, 4, 5, 11, 8, 12, 10, 11, 7, 6, 4, 9, 7)
+    private fun mockData() = listOf(5, 8, 9, 12, 3, 6, 2)
 
     private fun mockCircleData() = CircleChartData(
         title = "Best x Least Seller",
