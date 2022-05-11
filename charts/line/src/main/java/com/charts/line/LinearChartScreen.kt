@@ -16,8 +16,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
@@ -34,7 +32,8 @@ fun LinearChartScreen(
             .height(200.dp)
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = 10.dp
+        elevation = 10.dp,
+        backgroundColor = backgroundColor
     ) {
         Column(
             modifier = Modifier
@@ -104,7 +103,7 @@ fun LinearChart(
                 offset = horizontalOffset
             )
 
-            drawLineChart(points, lineColor, chartDrawableArea, canvas)
+            drawLineChart(points, lineColor)
 
             drawXAxis(xAxis, xAxisDrawableArea, xAxisLabelsDrawableArea, canvas)
             drawYAxis(yAxis, yAxisDrawableArea, yAxisLabelsDrawableArea, minValue, maxValue, canvas)
@@ -153,31 +152,9 @@ private fun DrawScope.drawYAxis(yAxis: YAxis,
 
 private fun DrawScope.drawLineChart(
     points: MutableList<PointF>,
-    lineColor: Color,
-    drawableArea: Rect,
-    canvas: Canvas
+    lineColor: Color
 ) {
-
-    val axisLinePaint = Paint().apply {
-        isAntiAlias = true
-        color = lineColor
-        style = PaintingStyle.Stroke
-        strokeWidth = 8f
-    }
-
     for (i in 0 until points.size - 1) {
-//        canvas.drawLine(
-//            p1 = Offset(
-//                x = drawableArea.left - points[i].x,
-//                y = drawableArea.left - points[i].y
-//            ),
-//            p2 = Offset(
-//                x = points[i + 1].x,
-//                y = points[i + 1].y
-//            ),
-//            paint = axisLinePaint
-//        )
-
         drawLine(
             start = Offset(points[i].x - 100, points[i].y),
             end = Offset(points[i + 1].x - 100, points[i + 1].y),
