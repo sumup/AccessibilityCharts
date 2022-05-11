@@ -36,7 +36,7 @@ fun CircleChartScreen(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(24.dp),
+            .padding(16.dp),
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
