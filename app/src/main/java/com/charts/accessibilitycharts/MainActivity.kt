@@ -45,11 +45,13 @@ class MainActivity : ComponentActivity() {
         title = "Best x Least Seller",
         circleA = CircleData(
             title = "Cappuccino",
-            value = 40f
+            value = 40f,
+            backgroundRes = com.charts.circle.R.drawable.cappucino
         ),
         circleB = CircleData(
             title = "Garlic Bread",
-            value = 10f
+            value = 8f,
+            backgroundRes = com.charts.circle.R.drawable.garlic_bread
         )
     )
 }
