@@ -1,5 +1,7 @@
 package com.charts.circle
 
+import androidx.annotation.DrawableRes
+
 data class CircleChartData(
     val title: String,
     val circleA: CircleData,
@@ -8,10 +10,11 @@ data class CircleChartData(
     fun largeCircle(): CircleData = if (circleA.value >= circleB.value) circleA else circleB
     fun smallCircle(): CircleData = if (circleA.value <= circleB.value) circleA else circleB
     fun largeRatio(): Float = largeCircle().value / largeCircle().value
-    fun smallRatio(): Float = smallCircle().value / largeCircle().value
+    fun smallRatio(): Float = 1.75f * (smallCircle().value / largeCircle().value)
 }
 
 data class CircleData(
     val title: String,
-    val value: Float
+    val value: Float,
+    @DrawableRes val backgroundRes: Int
 )
