@@ -1,5 +1,8 @@
 package com.charts.circle
 
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
@@ -12,7 +15,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +23,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.*
@@ -66,14 +67,23 @@ fun CircleChart(
 
     Column(Modifier.padding(16.dp)) {
         Row {
-            Text(
+            Column(
                 modifier = Modifier
-                    .weight(1f),
-                text = circleChartData.title,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+                    .weight(1f)
+                    .padding(bottom = 24.dp)
+            ) {
+                Text(
+                    text = circleChartData.title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = "January 7, 2022",
+                    fontSize = 14.sp,
+                    color = Color(0xFF999999)
+                )
+            }
             IconButton(
                 onClick = {
                     Toast
@@ -92,7 +102,8 @@ fun CircleChart(
         }
         Box(
             modifier = Modifier.semantics(mergeDescendants = true) {
-                contentDescription = "Descrição do gráfico: O círculo maior em cor preta repesenta o produto mais vendido, o cappuccino, sendo 40 unidades vendidas. O círculo menor em cor branca e borda preta representa o menos vendido, o pão de alho, sendo 8 unidades vendidas."
+                contentDescription =
+                    "Descrição do gráfico: O círculo maior em cor preta repesenta o produto mais vendido, o cappuccino, sendo 40 unidades vendidas. O círculo menor em cor branca e borda preta representa o menos vendido, o pão de alho, sendo 8 unidades vendidas."
             }
         ) {
             Column(
@@ -167,7 +178,7 @@ fun CircleChart(
                     fontSize = 16.sp,
                     color = Color.Black
                 )
-                Row{
+                Row {
                     Text(
                         text = circleChartData.smallCircle().value.toInt().toString(),
                         fontSize = 48.sp,
@@ -205,6 +216,7 @@ fun Circle(
         animationSpec = tween(durationMillis = 250),
         targetValue = if (isVisible) 1f else 0f
     )
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -216,9 +228,11 @@ fun Circle(
                 shape = CircleShape
             )
             .background(fillColor)
-            .clearAndSetSemantics {  }
+            .clearAndSetSemantics { }
             .clickable {
-                onClick.invoke()
+                if (context.isAccessibilityEnabled().not()) {
+                    onClick.invoke()
+                }
             }
     ) {
         Image(
@@ -228,3 +242,10 @@ fun Circle(
         )
     }
 }
+
+fun Context.isAccessibilityEnabled(): Boolean =
+    (getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager)?.let {
+        val serviceInfoList =
+            it.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
+        serviceInfoList?.isNotEmpty() ?: false
+    } ?: false
