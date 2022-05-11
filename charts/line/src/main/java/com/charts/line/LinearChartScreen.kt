@@ -35,11 +35,7 @@ fun LinearChartScreen(
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .wrapContentSize(align = Alignment.TopStart)
-        ) {
+        Column {
             Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(
@@ -73,7 +69,10 @@ fun LinearChartScreen(
             }
 
             LinearChart(
-                modifier = Modifier.height(170.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .height(170.dp)
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 data = data,
                 lineColor = lineColor,
                 backgroundColor = backgroundColor
@@ -91,7 +90,8 @@ fun LinearChart(
     xAxis: XAxis = DefaultXAxis(),
     yAxis: YAxis = DefaultYAxis(),
     horizontalOffset: Float = 5f,
-    verticalOffset: Float = -5f
+    verticalOffset: Float = -5f,
+    pointDrawer: PointDrawer = PointDrawer()
 ) {
     Canvas(modifier = modifier) {
         val distance = size.width / data.size
@@ -100,16 +100,23 @@ fun LinearChart(
         val minValue = 0
         val points = mutableListOf<PointF>()
 
-        data.forEachIndexed { index, currentData ->
-            if (data.size >= index + 1) {
-                val y = (maxValue - currentData) * (size.height / maxValue)
-                val x = currentX + distance
-                points.add(PointF(x, y))
-                currentX += distance
-            }
-        }
-
         drawIntoCanvas { canvas ->
+
+            data.forEachIndexed { index, currentData ->
+                if (data.size >= index + 1) {
+                    val y = (maxValue - currentData) * (size.height / maxValue)
+                    val x = currentX + distance
+                    points.add(PointF(x, y))
+                    currentX += distance
+
+                    pointDrawer.drawPoint(
+                        drawScope = this,
+                        canvas = canvas,
+                        center = Offset(currentX - 100, y - 40)
+                    )
+                }
+            }
+
             val yAxisDrawableArea = calculateYAxisDrawableArea(
                 xAxisLabelSize = xAxis.height(this),
                 size = size
@@ -127,12 +134,6 @@ fun LinearChart(
             val yAxisLabelsDrawableArea = calculateYAxisLabelsDrawableArea(
                 yAxisDrawableArea = yAxisDrawableArea,
                 offset = verticalOffset
-            )
-            val chartDrawableArea = calculateDrawableArea(
-                xAxisDrawableArea = xAxisDrawableArea,
-                yAxisDrawableArea = yAxisDrawableArea,
-                size = size,
-                offset = horizontalOffset
             )
 
             drawLineChart(points, lineColor)
@@ -157,7 +158,7 @@ private fun DrawScope.drawXAxis(xAxis: XAxis,
         drawScope = this,
         canvas = canvas,
         drawableArea = xAxisDrawableLabelArea,
-        labels = listOf("00", "04", "08", "12", "16", "20", "")
+        labels = listOf("00", "06", "12", "18", "")
     )
 }
 

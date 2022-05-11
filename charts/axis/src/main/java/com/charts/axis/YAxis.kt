@@ -35,7 +35,6 @@ class DefaultYAxis(
     private val labelTextSize: TextUnit = 12.sp,
     private val labelTextColor: Color = Color.Black,
     private val labelRatio: Int = 3,
-    private val labelValueFormatter: LabelFormatter = { value -> "%.1f".format(value) },
     private val axisLineThickness: Dp = 1.dp,
     private val axisLineColor: Color = Color.Black
 ) : YAxis {
@@ -91,7 +90,7 @@ class DefaultYAxis(
         for (i in 0..labelCount) {
             val value = minValue + (i * ((maxValue - minValue) / labelCount))
 
-            val label = labelValueFormatter(value)
+            val label = value.toInt().toString()
             val x = drawableArea.right - axisLineThickness.toPx() - (labelTextSize.toPx() / 2f)
 
             labelPaint.getTextBounds(label, 0, label.length, textBounds)
@@ -112,5 +111,3 @@ fun Color.toLegacyInt(): Int {
         (blue * 255.0f + 0.5f).toInt()
     )
 }
-
-typealias LabelFormatter = (value: Float) -> String
