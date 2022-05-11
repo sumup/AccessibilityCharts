@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.absoluteValue
 
 @Composable
 fun BarChartScreen(
@@ -152,6 +154,9 @@ fun BarChart(
                 title = tooltipTitle,
                 value = tooltipValue,
                 index = index,
+                modifier = Modifier.onFocusChanged {
+
+                }
             )
         }
     }
@@ -201,7 +206,7 @@ fun Bar(
         }
 
         Spacer(Modifier.height(16.dp))
-        Text(text = text, color = Color.Black, modifier = Modifier.clearAndSetSemantics {  })
+        Text(text = text, color = Color.Black, modifier = Modifier.clearAndSetSemantics { })
     }
 }
 
@@ -215,7 +220,9 @@ fun BarTooltip(
     Card(
         modifier
             .wrapContentSize()
-            .padding(start = (index * 24).dp),
+            .padding(start = (index.absoluteValue * 24).dp)
+            .clearAndSetSemantics { contentDescription = "teste" }
+            .clickable { },
         border = BorderStroke(width = 1.dp, color = Color.Black)
     ) {
         Column(
