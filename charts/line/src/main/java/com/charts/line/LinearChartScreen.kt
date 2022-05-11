@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import android.graphics.PointF
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -32,10 +33,11 @@ fun LinearChartScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
+        shape = RoundedCornerShape(8),
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        Column {
+        Column(modifier = Modifier.padding(8.dp)) {
             Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(

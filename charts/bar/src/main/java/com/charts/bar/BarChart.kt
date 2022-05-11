@@ -33,10 +33,11 @@ fun BarChartScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
+        shape = RoundedCornerShape(8),
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        Column {
+        Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 Modifier
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)

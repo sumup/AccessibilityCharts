@@ -13,6 +13,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -45,6 +46,7 @@ fun CircleChartScreen(
                 contentDescription =
                     "Best Sellers vs Least Sellers Circular Chart for January 7, 2022."
             },
+        shape = RoundedCornerShape(8),
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
@@ -71,7 +73,7 @@ fun CircleChart(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = 24.dp)
+                    .padding(bottom = 24.dp, top = 24.dp)
             ) {
                 Text(
                     text = circleChartData.title,
@@ -91,9 +93,11 @@ fun CircleChart(
                         .makeText(context, "play na musica", Toast.LENGTH_SHORT)
                         .show()
                 },
-                Modifier.semantics {
-                    contentDescription = "Play the sound of the best and least sold."
-                }
+                Modifier
+                    .padding(top = 24.dp)
+                    .semantics {
+                        contentDescription = "Play the sound of the best and least sold."
+                    }
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_music),
