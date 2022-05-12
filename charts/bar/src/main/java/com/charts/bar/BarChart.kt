@@ -53,7 +53,7 @@ fun BarChartScreen(
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
+                    .padding(start = 16.dp, top = 16.dp, bottom = 32.dp)
                     .semantics {
                         contentDescription =
                             "Bar Chart with sales of the week, total value of 20.000,00 €. From January 1, 2022 to January 8, 2022."

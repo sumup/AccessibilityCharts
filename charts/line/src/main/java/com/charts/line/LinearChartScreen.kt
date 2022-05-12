@@ -2,7 +2,6 @@ package com.charts.line
 
 import android.graphics.PointF
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,7 +57,7 @@ fun LinearChartScreen(
                         "Line Chart with Today’s Sales. January 7th. 2022, total value of 7.000,00 €."
                 }
         ) {
-            Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
+            Row(Modifier.padding(start = 16.dp, top = 16.dp, bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(
                         text = "Sales Today",

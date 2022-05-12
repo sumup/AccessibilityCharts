@@ -79,7 +79,7 @@ fun CircleChart(
         mutableStateOf(listOf(maxValue, minValue))
     }
 
-    Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
+    Column(Modifier.padding(start = 16.dp)) {
         Row {
             Column(
                 modifier = Modifier
@@ -104,7 +104,7 @@ fun CircleChart(
                     playSoundTimes += 1
                 },
                 Modifier
-                    .padding(top = 24.dp)
+                    .padding(top = 24.dp, end = 8.dp)
                     .semantics {
                         contentDescription = "Play the sound of the best and least sold."
                     }
@@ -185,7 +185,7 @@ fun CircleChart(
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(top = 232.dp)
+                    .padding(top = 232.dp, end = 16.dp)
                     .clearAndSetSemantics { }
             ) {
                 Text(
