@@ -1,7 +1,6 @@
 package com.charts.line
 
 import android.graphics.PointF
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -61,7 +59,7 @@ fun LinearChartScreen(
                 .padding(8.dp)
                 .semantics {
                     contentDescription =
-                        "Line Chart of Sales by hour on January 7, 2022, total value of 7.000,00 €."
+                        "Line Chart with Today’s Sales. January 7th. 2022, total value of 7.000,00 €."
                 }
         ) {
             Row(
@@ -73,7 +71,7 @@ fun LinearChartScreen(
                         bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        text = "Sales by hour",
+                        text = "Sales Today",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -98,7 +96,7 @@ fun LinearChartScreen(
                         playSoundTimes += 1
                     },
                     modifier = Modifier.semantics {
-                        contentDescription = "Play the sound of the total sales by hour graph"
+                        contentDescription = "Play the sound of Today’s Sales chart."
                     }
                 ) {
                     Icon(

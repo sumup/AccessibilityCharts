@@ -25,13 +25,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.*
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.charts.player.AudioPlayer
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun CircleChartScreen(
@@ -69,19 +70,16 @@ fun CircleChart(
     var isBrokenHeartVisible by remember { mutableStateOf(false) }
     var isHeartVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val minValue = circleChartData.smallCircle().value.toDouble()
+    val maxValue = circleChartData.largeCircle().value.toDouble()
     var playSoundTimes by remember {
         mutableStateOf(0)
     }
-    var playLargeCircleSoundTimes by remember {
-        mutableStateOf(0)
+    var values by remember {
+        mutableStateOf(listOf(maxValue, minValue))
     }
-    var playSmallCircleSoundTimes by remember {
-        mutableStateOf(0)
-    }
-    val minValue = circleChartData.smallCircle().value.toDouble()
-    val maxValue = circleChartData.largeCircle().value.toDouble()
 
-    Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
+    Column(Modifier.padding(start = 16.dp)) {
         Row {
             Column(
                 modifier = Modifier
@@ -102,10 +100,11 @@ fun CircleChart(
             }
             IconButton(
                 onClick = {
+                    values = listOf(maxValue, minValue)
                     playSoundTimes += 1
                 },
                 Modifier
-                    .padding(top = 24.dp)
+                    .padding(top = 24.dp, end = 8.dp)
                     .semantics {
                         contentDescription = "Play the sound of the best and least sold."
                     }
@@ -119,7 +118,7 @@ fun CircleChart(
         Box(
             modifier = Modifier.semantics(mergeDescendants = true) {
                 contentDescription =
-                    "The larger circle in black represents the most sold product, Cappuccino, with 40 units sold. The smaller circle in white color and black border represents the least sold product, garlic bread, with 8 units sold."
+                    "The larger circle in black represents the most sold product, Cappuccino, with 40 units sold. The smaller circle in white color and black border represents the least sold product, Cheesecake, with 8 units sold."
             }
         ) {
             Column(
@@ -167,7 +166,8 @@ fun CircleChart(
                     backgroundRes = circleChartData.largeCircle().backgroundRes,
                     isVisible = isHeartVisible,
                     onClick = {
-                        playLargeCircleSoundTimes += 1
+                        values = listOf(maxValue)
+                        playSoundTimes += 1
                     }
                 )
                 Circle(
@@ -177,14 +177,15 @@ fun CircleChart(
                     backgroundRes = circleChartData.smallCircle().backgroundRes,
                     isVisible = isBrokenHeartVisible,
                     onClick = {
-                        playSmallCircleSoundTimes += 1
+                        values = listOf(minValue)
+                        playSoundTimes += 1
                     }
                 )
             }
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(top = 232.dp)
+                    .padding(top = 232.dp, end = 16.dp)
                     .clearAndSetSemantics { }
             ) {
                 Text(
@@ -220,11 +221,10 @@ fun CircleChart(
     if (playSoundTimes > 0) {
         LaunchedEffect(key1 = playSoundTimes) {
             val player = AudioPlayer(context)
-            val values = listOf(maxValue, minValue)
 
             player.updateLowHighPoints(minValue, maxValue)
             values.forEach { value ->
-                delay(700)
+                delay(900)
                 if (value == maxValue) {
                     isHeartVisible = true
                     isBrokenHeartVisible = false
@@ -234,57 +234,7 @@ fun CircleChart(
                 }
                 player.onPointFocused(1.0, value)
             }
-            delay(700)
-            isHeartVisible = false
-            isBrokenHeartVisible = false
-
-            player.dispose()
-        }
-    }
-
-    if (playLargeCircleSoundTimes > 0) {
-        LaunchedEffect(key1 = playLargeCircleSoundTimes) {
-            val player = AudioPlayer(context)
-            val values = listOf(maxValue)
-
-            player.updateLowHighPoints(minValue, maxValue)
-            values.forEach { value ->
-                delay(700)
-                if (value == maxValue) {
-                    isHeartVisible = true
-                    isBrokenHeartVisible = false
-                } else if (value == minValue) {
-                    isHeartVisible = false
-                    isBrokenHeartVisible = true
-                }
-                player.onPointFocused(1.0, value)
-            }
-            delay(700)
-            isHeartVisible = false
-            isBrokenHeartVisible = false
-
-            player.dispose()
-        }
-    }
-
-    if (playSmallCircleSoundTimes > 0) {
-        LaunchedEffect(key1 = playSmallCircleSoundTimes) {
-            val player = AudioPlayer(context)
-            val values = listOf(minValue)
-
-            player.updateLowHighPoints(minValue, maxValue)
-            values.forEach { value ->
-                delay(700)
-                if (value == maxValue) {
-                    isHeartVisible = true
-                    isBrokenHeartVisible = false
-                } else if (value == minValue) {
-                    isHeartVisible = false
-                    isBrokenHeartVisible = true
-                }
-                player.onPointFocused(1.0, value)
-            }
-            delay(700)
+            delay(900)
             isHeartVisible = false
             isBrokenHeartVisible = false
 

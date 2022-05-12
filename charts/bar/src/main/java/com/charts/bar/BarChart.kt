@@ -53,14 +53,14 @@ fun BarChartScreen(
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
+                    .padding(start = 16.dp, top = 16.dp, bottom = 32.dp)
                     .semantics {
                         contentDescription =
-                            "Graph of total sales, total value of 20.000,00 €. From January 1, 2022 to January 8, 2022"
+                            "Bar Chart with sales of the week, total value of 20.000,00 €. From January 1, 2022 to January 8, 2022."
                     }) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        text = "Total Sales",
+                        text = "Sales this Week",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -87,7 +87,7 @@ fun BarChartScreen(
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_vector),
-                        contentDescription = "Play the sound of the total sales graph"
+                        contentDescription = "Play the sound of Sales of This Week chart"
                     )
                 }
             }
@@ -102,7 +102,10 @@ fun BarChartScreen(
         val context = LocalContext.current
         LaunchedEffect(key1 = playSoundTimes) {
             val player = AudioPlayer(context)
-            player.updateLowHighPoints(values.minOrNull()?.toDouble() ?: 0.0, values.maxOrNull()?.toDouble() ?: 0.0)
+            player.updateLowHighPoints(
+                values.minOrNull()?.toDouble() ?: 0.0,
+                values.maxOrNull()?.toDouble() ?: 0.0
+            )
             withTooltip = false
             values.forEachIndexed { indexValue, value ->
                 delay(500)
@@ -210,7 +213,9 @@ fun Bar(
     onSelected: () -> Unit
 ) {
     val alpha by animateFloatAsState(targetValue = if (isSelected) 1f else 0f)
-    val color by animateColorAsState(targetValue = if (isSelected || isNothingSelected) Color.Black else Color.Gray)
+    val color by animateColorAsState(
+        targetValue = if (isSelected || isNothingSelected) Color.Black else Color(0xFFE6E6E6)
+    )
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

@@ -3,16 +3,14 @@ package com.charts.player
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
+import android.os.Build
 import java.util.*
-import kotlin.concurrent.schedule
 
 class AudioPlayer(
     context: Context
 ) {
 
     companion object {
-        const val TIMER_NAME = "Summary"
-        const val TIMER_DELAY = 250L
         const val ECHO_RATE = 0.5f
         const val NORMAL_RATE = 1f
         val tones = intArrayOf(
@@ -46,22 +44,25 @@ class AudioPlayer(
 
     private var high = 0.0
     private var low = 0.0
-    private var maxTone = tones.size-1
+    private var maxTone = tones.size - 1
     private var minTone = 0
     private var echoEnabled = true
 
     private var timer: TimerTask? = null
     private var currentY = 0.0
     private val soundIds = mutableListOf<Int>()
-    private var soundPool: SoundPool? = SoundPool.Builder()
-        .setMaxStreams(7)
-        .setAudioAttributes(
-            AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-        )
-        .build()
+    //TODO change usage to AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY after recording
+    private val audioAttributesBuilder = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_GAME)
+        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+
+    private var soundPool: SoundPool? =
+        SoundPool.Builder()
+            .setMaxStreams(7)
+            .setAudioAttributes(
+                audioAttributesBuilder.build()
+            )
+            .build()
 
     init {
         for (tone in tones) {
@@ -72,12 +73,19 @@ class AudioPlayer(
     }
 
     private fun playToneAtGivenProgress(benchmark: Double, y: Double) {
-        soundPool?.play(soundIds[getIndexFromY(y)], 1f, 1f, 0, 0, if (y < benchmark && echoEnabled) ECHO_RATE else NORMAL_RATE)
+        soundPool?.play(
+            soundIds[getIndexFromY(y)],
+            1f,
+            1f,
+            0,
+            0,
+            if (y < benchmark && echoEnabled) ECHO_RATE else NORMAL_RATE
+        )
     }
 
-    internal fun getIndexFromY(y: Double): Int {
+    private fun getIndexFromY(y: Double): Int {
         val percentage = (y - low) / (high - low)
-        val index = ((tones.size-1) * percentage).toInt()
+        val index = ((tones.size - 1) * percentage).toInt()
         return when {
             index > maxTone -> {
                 maxTone
@@ -87,16 +95,6 @@ class AudioPlayer(
             }
             else -> {
                 index
-            }
-        }
-    }
-
-    fun playSummaryAudio(previousClose: Double, points: List<Double>) {
-        timer?.cancel()
-        var summaryIndex = 0
-        timer = Timer(TIMER_NAME, false).schedule(0, TIMER_DELAY) {
-            if (summaryIndex < points.size) {
-                playToneAtGivenProgress(previousClose, points[summaryIndex++])
             }
         }
     }
@@ -111,18 +109,6 @@ class AudioPlayer(
     fun updateLowHighPoints(low: Double, high: Double) {
         this.high = high
         this.low = low
-    }
-
-    fun setMaxTone(maxTone: Int) {
-        this.maxTone = maxTone
-    }
-
-    fun setMinTone(minTone: Int) {
-        this.minTone = minTone
-    }
-
-    fun setEchoEnabled(echoEnabled: Boolean) {
-        this.echoEnabled = echoEnabled
     }
 
     fun dispose() {
