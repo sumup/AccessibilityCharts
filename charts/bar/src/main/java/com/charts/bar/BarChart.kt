@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -23,12 +24,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.charts.player.AudioPlayer
+import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 
 @Composable
 fun BarChartScreen(
     backgroundColor: Color = Color.White
 ) {
+    var playSoundTimes by remember {
+        mutableStateOf(0)
+    }
+    val values: List<Float> = listOf(10f, 50f, 60f, 10f, 50f, 60f, 30f)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,7 +75,9 @@ fun BarChartScreen(
                 }
 
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        playSoundTimes += 1
+                    }
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_vector),
@@ -77,7 +86,21 @@ fun BarChartScreen(
                 }
             }
 
-            BarChart()
+            BarChart(values)
+        }
+    }
+
+    if (playSoundTimes > 0) {
+        val context = LocalContext.current
+        LaunchedEffect(key1 = playSoundTimes) {
+            val player = AudioPlayer(context)
+            player.updateLowHighPoints(values.minOrNull()?.toDouble() ?: 0.0, values.maxOrNull()?.toDouble() ?: 0.0)
+            values.forEach { value ->
+                delay(500)
+                player.onPointFocused(1.0, value.toDouble())
+            }
+            delay(500)
+            player.dispose()
         }
     }
 }
