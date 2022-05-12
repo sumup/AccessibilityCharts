@@ -68,21 +68,15 @@ fun CircleChart(
     var isBrokenHeartVisible by remember { mutableStateOf(false) }
     var isHeartVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val minValue = circleChartData.smallCircle().value.toDouble()
+    val maxValue = circleChartData.largeCircle().value.toDouble()
     var playSoundTimes by remember {
         mutableStateOf(0)
     }
-    var playLargeCircleSoundTimes by remember {
-        mutableStateOf(0)
-    }
-    var playSmallCircleSoundTimes by remember {
-        mutableStateOf(0)
-    }
-    val minValue = circleChartData.smallCircle().value.toDouble()
-    val maxValue = circleChartData.largeCircle().value.toDouble()
     var values by remember {
         mutableStateOf(listOf(maxValue, minValue))
     }
-
+    
     Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Row {
             Column(
