@@ -54,11 +54,7 @@ class AudioPlayer(
     //TODO change usage to AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY after recording
     private val audioAttributesBuilder = AudioAttributes.Builder()
         .setUsage(AudioAttributes.USAGE_GAME)
-        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                setAllowedCapturePolicy(AudioAttributes.ALLOW_CAPTURE_BY_ALL)
-            }
-        }
+        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
 
     private var soundPool: SoundPool? =
         SoundPool.Builder()
