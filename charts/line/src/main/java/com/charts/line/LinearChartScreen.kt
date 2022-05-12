@@ -1,14 +1,14 @@
 package com.charts.line
 
 import android.graphics.PointF
-import android.util.Log
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,26 +17,33 @@ import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.charts.axis.*
 import com.charts.player.AudioPlayer
 import kotlinx.coroutines.delay
+import kotlin.math.absoluteValue
 
 @Composable
 fun LinearChartScreen(
     lineColor: Color = Color.Black,
     backgroundColor: Color = Color.White,
-    data: List<Int>,
-) {
+    data: List<Int>) {
 
     var playSoundTimes by remember {
         mutableStateOf(0)
+    }
+
+    var pointClicked by remember {
+        mutableStateOf(-1)
     }
 
     Card(
@@ -47,8 +54,6 @@ fun LinearChartScreen(
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        val context = LocalContext.current
-
         Column(
             modifier = Modifier
                 .padding(8.dp)
@@ -57,7 +62,13 @@ fun LinearChartScreen(
                         "Line Chart with Today’s Sales. January 7th. 2022, total value of 7.000,00 €."
                 }
         ) {
-            Row(Modifier.padding(start = 16.dp, top = 16.dp, bottom = 32.dp)) {
+            Row(
+                Modifier
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(
                         text = "Sales Today",
@@ -94,17 +105,45 @@ fun LinearChartScreen(
                 }
             }
 
-            LinearChart(
+            val dotRects = ArrayList<Rect>()
+            dotRects.add(Rect(top = 0f, left = 0f, bottom = 360f, right = 180f))
+            dotRects.add(Rect(top = 0f, left = 181f, bottom = 360f, right = 280f))
+            dotRects.add(Rect(top = 0f, left = 350f, bottom = 360f, right = 420f))
+            dotRects.add(Rect(top = 0f, left = 421f, bottom = 360f, right = 600f))
+            dotRects.add(Rect(top = 0f, left = 601f, bottom = 360f, right = 800f))
+            LineChart(
                 modifier = Modifier
                     .height(170.dp)
-                    .padding(16.dp)
-                    .fillMaxWidth()
+                    .clickable {  }
                     .semantics {
-                               contentDescription = ""
-                    },
+                        contentDescription = """
+                            Sales on 05 hours, 1.000,00 €.
+                            Sales on 07 hours, 1.000,00 €.
+                            Sales on 12 hours, 3.000,00 €.
+                            Sales on 16 hours, 1.700,00 €.
+                            Sales on 20 hours, 1.700,00 €.
+                        """.trimIndent()
+                    }
+                    .padding(16.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = { tapOffset ->
+                                dotRects.forEachIndexed { index, rect ->
+                                    if (rect.contains(tapOffset)) {
+                                        pointClicked = index
+                                    }
+                                }
+                            }
+                        )
+                    }
+                    .fillMaxWidth(),
                 data = data,
                 lineColor = lineColor,
-                backgroundColor = backgroundColor
+                backgroundColor = backgroundColor,
+                pointClicked = pointClicked,
+                onDismissRequest = {
+                    pointClicked = -1
+                }
             )
         }
     }
@@ -115,15 +154,11 @@ fun LinearChartScreen(
         LaunchedEffect(key1 = playSoundTimes) {
             player.updateLowHighPoints(data.minOrNull()?.toDouble() ?: 0.0, data.maxOrNull()?.toDouble() ?: 0.0)
 
-//            player.playSummaryAudio(1.0, data.map { it.toDouble() })
-
             data.forEach { value ->
                 delay(500)
-
-                Log.d("HSS", "value is $value")
-
                 player.onPointFocused(1.0, value.toDouble())
             }
+
             delay(4000)
             player.dispose()
         }
@@ -131,7 +166,7 @@ fun LinearChartScreen(
 }
 
 @Composable
-fun LinearChart(
+fun LineChart(
     modifier: Modifier = Modifier,
     data: List<Int>,
     lineColor: Color,
@@ -140,55 +175,70 @@ fun LinearChart(
     yAxis: YAxis = DefaultYAxis(),
     horizontalOffset: Float = 5f,
     verticalOffset: Float = -5f,
-    pointDrawer: PointDrawer = PointDrawer()
+    pointDrawer: PointDrawer = PointDrawer(),
+    pointClicked: Int = -1,
+    onDismissRequest: () -> Unit
 ) {
-    Canvas(modifier = modifier) {
-        val distance = size.width / data.size
-        var currentX = 0F
-        val maxValue = data.maxOrNull() ?: 0
-        val minValue = 0
-        val points = mutableListOf<PointF>()
+    Box {
+        Canvas(modifier = modifier) {
+            val distance = size.width / data.size
+            var currentX = 0F
+            val maxValue = data.maxOrNull() ?: 0
+            val minValue = 0
+            val points = mutableListOf<PointF>()
 
-        drawIntoCanvas { canvas ->
+            drawIntoCanvas { canvas ->
 
-            data.forEachIndexed { index, currentData ->
-                if (data.size >= index + 1) {
-                    val y = (maxValue - currentData) * (size.height / maxValue)
-                    val x = currentX + distance
-                    points.add(PointF(x, y))
-                    currentX += distance
+                data.forEachIndexed { index, currentData ->
+                    if (data.size >= index + 1) {
+                        val y = (maxValue - currentData) * (size.height / maxValue)
+                        val x = currentX + distance
+                        points.add(PointF(x, y))
+                        currentX += distance
 
-                    pointDrawer.drawPoint(
-                        drawScope = this,
-                        canvas = canvas,
-                        center = Offset(currentX - 100, y - 40)
-                    )
+                        pointDrawer.drawPoint(
+                            drawScope = this,
+                            canvas = canvas,
+                            center = Offset(currentX - 100, y - 40)
+                        )
+                    }
                 }
+
+                val yAxisDrawableArea = calculateYAxisDrawableArea(
+                    xAxisLabelSize = xAxis.height(this),
+                    size = size
+                )
+
+                val xAxisDrawableArea = calculateXAxisDrawableArea(
+                    yAxisWidth = yAxisDrawableArea.width,
+                    labelHeight = xAxis.height(this),
+                    size = size
+                )
+                val xAxisLabelsDrawableArea = calculateXAxisLabelsDrawableArea(
+                    xAxisDrawableArea = xAxisDrawableArea,
+                    offset = horizontalOffset
+                )
+                val yAxisLabelsDrawableArea = calculateYAxisLabelsDrawableArea(
+                    yAxisDrawableArea = yAxisDrawableArea,
+                    offset = verticalOffset
+                )
+
+                drawLineChart(points, lineColor)
+
+                drawXAxis(xAxis, xAxisDrawableArea, xAxisLabelsDrawableArea, canvas)
+                drawYAxis(
+                    yAxis,
+                    yAxisDrawableArea,
+                    yAxisLabelsDrawableArea,
+                    minValue,
+                    maxValue,
+                    canvas
+                )
             }
+        }
 
-            val yAxisDrawableArea = calculateYAxisDrawableArea(
-                xAxisLabelSize = xAxis.height(this),
-                size = size
-            )
-
-            val xAxisDrawableArea = calculateXAxisDrawableArea(
-                yAxisWidth = yAxisDrawableArea.width,
-                labelHeight = xAxis.height(this),
-                size = size
-            )
-            val xAxisLabelsDrawableArea = calculateXAxisLabelsDrawableArea(
-                xAxisDrawableArea = xAxisDrawableArea,
-                offset = horizontalOffset
-            )
-            val yAxisLabelsDrawableArea = calculateYAxisLabelsDrawableArea(
-                yAxisDrawableArea = yAxisDrawableArea,
-                offset = verticalOffset
-            )
-
-            drawLineChart(points, lineColor)
-
-            drawXAxis(xAxis, xAxisDrawableArea, xAxisLabelsDrawableArea, canvas)
-            drawYAxis(yAxis, yAxisDrawableArea, yAxisLabelsDrawableArea, minValue, maxValue, canvas)
+        Tooltip(index = pointClicked, visible = pointClicked >= 0) {
+            onDismissRequest()
         }
     }
 }
@@ -243,5 +293,78 @@ private fun DrawScope.drawLineChart(
             color = lineColor,
             strokeWidth = 8f
         )
+    }
+}
+
+@Composable
+fun Tooltip(
+    index: Int,
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit
+) {
+    var lastIndex by remember {
+        mutableStateOf(-1)
+    }
+
+    if (index != -1) {
+        lastIndex = index
+    }
+
+    val indexValue = if (index == -1) {
+        lastIndex
+    } else index
+
+    var title = when(index) {
+        0 -> "Sales on 05 hours"
+        1 -> "Sales on 07 hours"
+        2 -> "Sales on 12 hours"
+        3 -> "Sales on 16 hours"
+        4 -> "Sales on 20 hours"
+        else -> ""
+    }
+
+    var value = when(index) {
+        0 -> "1.000,00 €"
+        1 -> "1.000,00 €"
+        2 -> "3.000,00 €"
+        3 -> "1.700,00 €"
+        4 -> "1.700,00 €"
+        else -> ""
+    }
+
+    DropdownMenu(
+        expanded = visible,
+        onDismissRequest = { onDismissRequest() },
+        offset = DpOffset(x = (indexValue.absoluteValue * 32).dp, y = 0.dp),
+        modifier = modifier
+            .wrapContentSize()
+            .clearAndSetSemantics {
+                contentDescription = "Sales on $title. Value of $value. Double tap to close."
+            }
+            .border(1.dp, color = Color.Black, shape = RoundedCornerShape(4.dp))
+            .background(Color.White)
+            .clickable {
+                onDismissRequest()
+            }
+    ) {
+        Column(
+            Modifier
+                .padding(16.dp)
+                .width(120.dp)
+        ) {
+            Text(
+                text = title,
+                fontSize = 14.sp,
+                color = Color(0xFF999999),
+            )
+
+            Text(
+                text = value,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+            )
+        }
     }
 }
