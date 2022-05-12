@@ -55,13 +55,13 @@ fun LinearChartScreen(
                 .padding(8.dp)
                 .semantics {
                     contentDescription =
-                        "Line Chart of Sales by hour on January 7, 2022, total value of 7.000,00 €."
+                        "Line Chart with Today’s Sales. January 7th. 2022, total value of 7.000,00 €."
                 }
         ) {
             Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        text = "Sales by hour",
+                        text = "Sales Today",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -86,7 +86,7 @@ fun LinearChartScreen(
                         playSoundTimes += 1
                     },
                     modifier = Modifier.semantics {
-                        contentDescription = "Play the sound of the total sales by hour graph"
+                        contentDescription = "Play the sound of Today’s Sales chart."
                     }
                 ) {
                     Icon(

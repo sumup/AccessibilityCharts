@@ -25,7 +25,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.*
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -116,7 +118,7 @@ fun CircleChart(
         Box(
             modifier = Modifier.semantics(mergeDescendants = true) {
                 contentDescription =
-                    "The larger circle in black represents the most sold product, Cappuccino, with 40 units sold. The smaller circle in white color and black border represents the least sold product, garlic bread, with 8 units sold."
+                    "The larger circle in black represents the most sold product, Cappuccino, with 40 units sold. The smaller circle in white color and black border represents the least sold product, Cheesecake, with 8 units sold."
             }
         ) {
             Column(
