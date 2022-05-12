@@ -2,6 +2,7 @@ package com.charts.line
 
 import androidx.compose.runtime.Composable
 import android.graphics.PointF
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,7 +19,10 @@ import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +32,7 @@ import com.charts.axis.*
 fun LinearChartScreen(
     lineColor: Color = Color.Black,
     backgroundColor: Color = Color.White,
-    data: List<Int>
+    data: List<Int>,
 ) {
     Card(
         modifier = Modifier
@@ -37,7 +42,16 @@ fun LinearChartScreen(
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        val context = LocalContext.current
+
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .semantics {
+                    contentDescription =
+                        "Line Chart of Sales by hour on January 7, 2022, total value of 7.000,00 €."
+                }
+        ) {
             Row(Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(
@@ -62,7 +76,12 @@ fun LinearChartScreen(
                 }
 
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        Toast.makeText(context, "play na musica", Toast.LENGTH_SHORT).show()
+                    },
+                    modifier = Modifier.semantics {
+                        contentDescription = "Play the sound of the total sales by hour graph"
+                    }
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_vector),
@@ -74,7 +93,10 @@ fun LinearChartScreen(
                 modifier = Modifier
                     .height(170.dp)
                     .padding(16.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .semantics {
+                               contentDescription = ""
+                    },
                 data = data,
                 lineColor = lineColor,
                 backgroundColor = backgroundColor
