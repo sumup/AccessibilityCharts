@@ -267,6 +267,7 @@ fun BarTooltip(
                 contentDescription = "Sales on $title. Value of $value. Double tap to close."
             }
             .border(1.dp, color = Color.Black, shape = RoundedCornerShape(4.dp))
+            .background(Color.White)
             .clickable {
                 onDismissRequest()
             }
