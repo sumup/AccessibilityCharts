@@ -45,6 +45,9 @@ fun LinearChartScreen(
     var pointClicked by remember {
         mutableStateOf(-1)
     }
+    var withTooltip by remember {
+        mutableStateOf(true)
+    }
 
     Card(
         modifier = Modifier
@@ -141,6 +144,7 @@ fun LinearChartScreen(
                 lineColor = lineColor,
                 backgroundColor = backgroundColor,
                 pointClicked = pointClicked,
+                withTooltip = withTooltip,
                 onDismissRequest = {
                     pointClicked = -1
                 }
@@ -153,6 +157,7 @@ fun LinearChartScreen(
         val player = AudioPlayer(context)
         LaunchedEffect(key1 = playSoundTimes) {
             player.updateLowHighPoints(data.minOrNull()?.toDouble() ?: 0.0, data.maxOrNull()?.toDouble() ?: 0.0)
+            withTooltip = false
 
             data.forEachIndexed { index, value ->
                 delay(500)
@@ -162,6 +167,7 @@ fun LinearChartScreen(
 
             delay(500)
             pointClicked = -1
+            withTooltip = true
             player.dispose()
         }
     }
@@ -179,6 +185,7 @@ fun LineChart(
     verticalOffset: Float = -5f,
     pointDrawer: PointDrawer = PointDrawer(),
     pointClicked: Int = -1,
+    withTooltip: Boolean = true,
     onDismissRequest: () -> Unit
 ) {
     Box {
@@ -240,7 +247,7 @@ fun LineChart(
             }
         }
 
-        Tooltip(index = pointClicked, visible = pointClicked >= 0) {
+        Tooltip(index = pointClicked, visible = pointClicked >= 0 && withTooltip) {
             onDismissRequest()
         }
     }
