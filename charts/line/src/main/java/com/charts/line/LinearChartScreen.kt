@@ -1,7 +1,7 @@
 package com.charts.line
 
-import androidx.compose.runtime.Composable
 import android.graphics.PointF
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
@@ -10,8 +10,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.materialIcon
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -27,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.charts.axis.*
+import com.charts.player.AudioPlayer
+import kotlinx.coroutines.delay
 
 @Composable
 fun LinearChartScreen(
@@ -34,6 +35,11 @@ fun LinearChartScreen(
     backgroundColor: Color = Color.White,
     data: List<Int>,
 ) {
+
+    var playSoundTimes by remember {
+        mutableStateOf(0)
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,7 +83,7 @@ fun LinearChartScreen(
 
                 IconButton(
                     onClick = {
-                        Toast.makeText(context, "play na musica", Toast.LENGTH_SHORT).show()
+                        playSoundTimes += 1
                     },
                     modifier = Modifier.semantics {
                         contentDescription = "Play the sound of the total sales by hour graph"
@@ -101,6 +107,26 @@ fun LinearChartScreen(
                 lineColor = lineColor,
                 backgroundColor = backgroundColor
             )
+        }
+    }
+
+    if (playSoundTimes > 0) {
+        val context = LocalContext.current
+        val player = AudioPlayer(context)
+        LaunchedEffect(key1 = playSoundTimes) {
+            player.updateLowHighPoints(data.minOrNull()?.toDouble() ?: 0.0, data.maxOrNull()?.toDouble() ?: 0.0)
+
+//            player.playSummaryAudio(1.0, data.map { it.toDouble() })
+
+            data.forEach { value ->
+                delay(500)
+
+                Log.d("HSS", "value is $value")
+
+                player.onPointFocused(1.0, value.toDouble())
+            }
+            delay(4000)
+            player.dispose()
         }
     }
 }
