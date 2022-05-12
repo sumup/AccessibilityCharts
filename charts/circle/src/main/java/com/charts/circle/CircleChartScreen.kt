@@ -70,6 +70,9 @@ fun CircleChart(
     var isBrokenHeartVisible by remember { mutableStateOf(false) }
     var isHeartVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    var playSoundTimes by remember {
+        mutableStateOf(0)
+    }
 
     Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Row {
@@ -92,19 +95,7 @@ fun CircleChart(
             }
             IconButton(
                 onClick = {
-                    AudioPlayer(context).run {
-                        val minValue = circleChartData.smallCircle().value.toDouble()
-                        val maxValue = circleChartData.largeCircle().value.toDouble()
-                        val benchmark = minValue / maxValue
-
-                        updateLowHighPoints(minValue, maxValue)
-                        runBlocking {
-                            delay(750L)
-                            playSummaryAudio(benchmark, listOf(maxValue, minValue))
-                            delay(1000L)
-                            dispose()
-                        }
-                    }
+                    playSoundTimes += 1
                 },
                 Modifier
                     .padding(top = 24.dp)
@@ -217,6 +208,32 @@ fun CircleChart(
                     )
                 }
             }
+        }
+    }
+
+    if (playSoundTimes > 0) {
+        LaunchedEffect(key1 = playSoundTimes) {
+            val minValue = circleChartData.smallCircle().value.toDouble()
+            val maxValue = circleChartData.largeCircle().value.toDouble()
+            val values = listOf(maxValue, minValue)
+            val player = AudioPlayer(context)
+
+            player.updateLowHighPoints(minValue, maxValue)
+            values.forEachIndexed { index, value ->
+                delay(500)
+                if (index == 0) {
+                    isHeartVisible = true
+                    isBrokenHeartVisible = false
+                } else {
+                    isHeartVisible = false
+                    isBrokenHeartVisible = true
+                }
+                player.onPointFocused(1.0, value)
+            }
+            delay(500)
+            isHeartVisible = false
+            isBrokenHeartVisible = false
+            player.dispose()
         }
     }
 }
