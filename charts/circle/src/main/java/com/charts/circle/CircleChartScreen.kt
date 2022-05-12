@@ -68,7 +68,7 @@ fun CircleChart(
     var isHeartVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    Column(Modifier.padding(16.dp)) {
+    Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Row {
             Column(
                 modifier = Modifier
