@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.charts.player.AudioPlayer
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun CircleChartScreen(
@@ -80,6 +79,9 @@ fun CircleChart(
     }
     val minValue = circleChartData.smallCircle().value.toDouble()
     val maxValue = circleChartData.largeCircle().value.toDouble()
+    var values by remember {
+        mutableStateOf(listOf(maxValue, minValue))
+    }
 
     Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Row {
@@ -102,6 +104,7 @@ fun CircleChart(
             }
             IconButton(
                 onClick = {
+                    values = listOf(maxValue, minValue)
                     playSoundTimes += 1
                 },
                 Modifier
@@ -167,7 +170,8 @@ fun CircleChart(
                     backgroundRes = circleChartData.largeCircle().backgroundRes,
                     isVisible = isHeartVisible,
                     onClick = {
-                        playLargeCircleSoundTimes += 1
+                        values = listOf(maxValue)
+                        playSoundTimes += 1
                     }
                 )
                 Circle(
@@ -177,7 +181,8 @@ fun CircleChart(
                     backgroundRes = circleChartData.smallCircle().backgroundRes,
                     isVisible = isBrokenHeartVisible,
                     onClick = {
-                        playSmallCircleSoundTimes += 1
+                        values = listOf(minValue)
+                        playSoundTimes += 1
                     }
                 )
             }
@@ -220,57 +225,6 @@ fun CircleChart(
     if (playSoundTimes > 0) {
         LaunchedEffect(key1 = playSoundTimes) {
             val player = AudioPlayer(context)
-            val values = listOf(maxValue, minValue)
-
-            player.updateLowHighPoints(minValue, maxValue)
-            values.forEach { value ->
-                delay(700)
-                if (value == maxValue) {
-                    isHeartVisible = true
-                    isBrokenHeartVisible = false
-                } else if (value == minValue) {
-                    isHeartVisible = false
-                    isBrokenHeartVisible = true
-                }
-                player.onPointFocused(1.0, value)
-            }
-            delay(700)
-            isHeartVisible = false
-            isBrokenHeartVisible = false
-
-            player.dispose()
-        }
-    }
-
-    if (playLargeCircleSoundTimes > 0) {
-        LaunchedEffect(key1 = playLargeCircleSoundTimes) {
-            val player = AudioPlayer(context)
-            val values = listOf(maxValue)
-
-            player.updateLowHighPoints(minValue, maxValue)
-            values.forEach { value ->
-                delay(700)
-                if (value == maxValue) {
-                    isHeartVisible = true
-                    isBrokenHeartVisible = false
-                } else if (value == minValue) {
-                    isHeartVisible = false
-                    isBrokenHeartVisible = true
-                }
-                player.onPointFocused(1.0, value)
-            }
-            delay(700)
-            isHeartVisible = false
-            isBrokenHeartVisible = false
-
-            player.dispose()
-        }
-    }
-
-    if (playSmallCircleSoundTimes > 0) {
-        LaunchedEffect(key1 = playSmallCircleSoundTimes) {
-            val player = AudioPlayer(context)
-            val values = listOf(minValue)
 
             player.updateLowHighPoints(minValue, maxValue)
             values.forEach { value ->
