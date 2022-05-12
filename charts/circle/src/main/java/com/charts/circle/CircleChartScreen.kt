@@ -30,6 +30,9 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.charts.player.AudioPlayer
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun CircleChartScreen(
@@ -89,9 +92,17 @@ fun CircleChart(
             }
             IconButton(
                 onClick = {
-                    Toast
-                        .makeText(context, "play na musica", Toast.LENGTH_SHORT)
-                        .show()
+                    AudioPlayer(context).run {
+                        val minValue = circleChartData.smallCircle().value.toDouble()
+                        val maxValue = circleChartData.largeCircle().value.toDouble()
+                        val benchmark = minValue / maxValue
+
+                        updateLowHighPoints(minValue, maxValue)
+                        runBlocking {
+                            delay(700L)
+                            playSummaryAudio(benchmark, listOf(maxValue, minValue))
+                        }
+                    }
                 },
                 Modifier
                     .padding(top = 24.dp)
