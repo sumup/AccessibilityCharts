@@ -73,6 +73,14 @@ fun CircleChart(
     var playSoundTimes by remember {
         mutableStateOf(0)
     }
+    var playLargeCircleSoundTimes by remember {
+        mutableStateOf(0)
+    }
+    var playSmallCircleSoundTimes by remember {
+        mutableStateOf(0)
+    }
+    val minValue = circleChartData.smallCircle().value.toDouble()
+    val maxValue = circleChartData.largeCircle().value.toDouble()
 
     Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Row {
@@ -160,8 +168,7 @@ fun CircleChart(
                     backgroundRes = circleChartData.largeCircle().backgroundRes,
                     isVisible = isHeartVisible,
                     onClick = {
-                        isHeartVisible = isHeartVisible.not()
-                        isBrokenHeartVisible = false
+                        playLargeCircleSoundTimes += 1
                     }
                 )
                 Circle(
@@ -171,8 +178,7 @@ fun CircleChart(
                     backgroundRes = circleChartData.smallCircle().backgroundRes,
                     isVisible = isBrokenHeartVisible,
                     onClick = {
-                        isBrokenHeartVisible = isBrokenHeartVisible.not()
-                        isHeartVisible = false
+                        playSmallCircleSoundTimes += 1
                     }
                 )
             }
@@ -213,18 +219,16 @@ fun CircleChart(
 
     if (playSoundTimes > 0) {
         LaunchedEffect(key1 = playSoundTimes) {
-            val minValue = circleChartData.smallCircle().value.toDouble()
-            val maxValue = circleChartData.largeCircle().value.toDouble()
-            val values = listOf(maxValue, minValue)
             val player = AudioPlayer(context)
+            val values = listOf(maxValue, minValue)
 
             player.updateLowHighPoints(minValue, maxValue)
-            values.forEachIndexed { index, value ->
+            values.forEach { value ->
                 delay(500)
-                if (index == 0) {
+                if (value == maxValue) {
                     isHeartVisible = true
                     isBrokenHeartVisible = false
-                } else {
+                } else if (value == minValue) {
                     isHeartVisible = false
                     isBrokenHeartVisible = true
                 }
@@ -233,6 +237,57 @@ fun CircleChart(
             delay(500)
             isHeartVisible = false
             isBrokenHeartVisible = false
+
+            player.dispose()
+        }
+    }
+
+    if (playLargeCircleSoundTimes > 0) {
+        LaunchedEffect(key1 = playLargeCircleSoundTimes) {
+            val player = AudioPlayer(context)
+            val values = listOf(maxValue)
+
+            player.updateLowHighPoints(minValue, maxValue)
+            values.forEach { value ->
+                delay(500)
+                if (value == maxValue) {
+                    isHeartVisible = true
+                    isBrokenHeartVisible = false
+                } else if (value == minValue) {
+                    isHeartVisible = false
+                    isBrokenHeartVisible = true
+                }
+                player.onPointFocused(1.0, value)
+            }
+            delay(500)
+            isHeartVisible = false
+            isBrokenHeartVisible = false
+
+            player.dispose()
+        }
+    }
+
+    if (playSmallCircleSoundTimes > 0) {
+        LaunchedEffect(key1 = playSmallCircleSoundTimes) {
+            val player = AudioPlayer(context)
+            val values = listOf(minValue)
+
+            player.updateLowHighPoints(minValue, maxValue)
+            values.forEach { value ->
+                delay(500)
+                if (value == maxValue) {
+                    isHeartVisible = true
+                    isBrokenHeartVisible = false
+                } else if (value == minValue) {
+                    isHeartVisible = false
+                    isBrokenHeartVisible = true
+                }
+                player.onPointFocused(1.0, value)
+            }
+            delay(500)
+            isHeartVisible = false
+            isBrokenHeartVisible = false
+
             player.dispose()
         }
     }
