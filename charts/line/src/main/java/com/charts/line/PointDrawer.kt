@@ -12,22 +12,22 @@ import androidx.compose.ui.unit.dp
 
 data class PointDrawer(
     val diameter: Dp = 8.dp,
-    val color: Color = Color.Black
 ) {
 
-    private val paint = Paint().apply {
-        color = this@PointDrawer.color
+    private fun getPaint(colorB: Color) = Paint().apply {
+        color = colorB
         style = PaintingStyle.Fill
         isAntiAlias = true
     }
 
     fun drawPoint(
+        color: Color,
         drawScope: DrawScope,
         canvas: Canvas,
         center: Offset
     ) {
         with(drawScope as Density) {
-            canvas.drawCircle(center, diameter.toPx() / 2f, paint)
+            canvas.drawCircle(center, diameter.toPx() / 2f, getPaint(color))
         }
     }
 }

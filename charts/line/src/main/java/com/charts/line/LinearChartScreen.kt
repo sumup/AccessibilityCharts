@@ -38,6 +38,9 @@ fun LinearChartScreen(
     var playSoundTimes by remember {
         mutableStateOf(0)
     }
+    var pointIndicatorIndex by remember {
+        mutableStateOf(-1)
+    }
 
     Card(
         modifier = Modifier
@@ -47,8 +50,6 @@ fun LinearChartScreen(
         elevation = 10.dp,
         backgroundColor = backgroundColor
     ) {
-        val context = LocalContext.current
-
         Column(
             modifier = Modifier
                 .padding(8.dp)
@@ -100,11 +101,12 @@ fun LinearChartScreen(
                     .padding(16.dp)
                     .fillMaxWidth()
                     .semantics {
-                               contentDescription = ""
+                        contentDescription = ""
                     },
                 data = data,
                 lineColor = lineColor,
-                backgroundColor = backgroundColor
+                backgroundColor = backgroundColor,
+                pointIndicatorIndex = pointIndicatorIndex
             )
         }
     }
@@ -115,16 +117,13 @@ fun LinearChartScreen(
         LaunchedEffect(key1 = playSoundTimes) {
             player.updateLowHighPoints(data.minOrNull()?.toDouble() ?: 0.0, data.maxOrNull()?.toDouble() ?: 0.0)
 
-//            player.playSummaryAudio(1.0, data.map { it.toDouble() })
-
-            data.forEach { value ->
+            data.forEachIndexed { index, value ->
                 delay(500)
-
-                Log.d("HSS", "value is $value")
-
+                pointIndicatorIndex = index
                 player.onPointFocused(1.0, value.toDouble())
             }
-            delay(4000)
+            delay(500)
+            pointIndicatorIndex = -1
             player.dispose()
         }
     }
@@ -140,7 +139,8 @@ fun LinearChart(
     yAxis: YAxis = DefaultYAxis(),
     horizontalOffset: Float = 5f,
     verticalOffset: Float = -5f,
-    pointDrawer: PointDrawer = PointDrawer()
+    pointDrawer: PointDrawer = PointDrawer(),
+    pointIndicatorIndex: Int
 ) {
     Canvas(modifier = modifier) {
         val distance = size.width / data.size
@@ -161,7 +161,8 @@ fun LinearChart(
                     pointDrawer.drawPoint(
                         drawScope = this,
                         canvas = canvas,
-                        center = Offset(currentX - 100, y - 40)
+                        center = Offset(currentX - 100, y - 40),
+                        color = if (pointIndicatorIndex == index || pointIndicatorIndex == -1) Color.Black else Color(0xFFE6E6E6)
                     )
                 }
             }
