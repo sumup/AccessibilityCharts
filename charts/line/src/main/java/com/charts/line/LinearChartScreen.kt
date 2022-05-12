@@ -69,7 +69,6 @@ fun LinearChartScreen(
                 Modifier
                     .padding(
                         start = 16.dp,
-                        end = 16.dp,
                         top = 16.dp,
                         bottom = 32.dp)) {
                 Column(Modifier.weight(1f)) {
