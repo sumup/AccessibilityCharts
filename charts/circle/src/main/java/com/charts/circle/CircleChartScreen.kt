@@ -3,7 +3,6 @@ package com.charts.circle
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -198,7 +197,8 @@ fun CircleChart(
                         text = circleChartData.smallCircle().value.toInt().toString(),
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
 
                     val alpha by animateFloatAsState(
@@ -224,7 +224,7 @@ fun CircleChart(
 
             player.updateLowHighPoints(minValue, maxValue)
             values.forEach { value ->
-                delay(500)
+                delay(700)
                 if (value == maxValue) {
                     isHeartVisible = true
                     isBrokenHeartVisible = false
@@ -234,7 +234,7 @@ fun CircleChart(
                 }
                 player.onPointFocused(1.0, value)
             }
-            delay(500)
+            delay(700)
             isHeartVisible = false
             isBrokenHeartVisible = false
 
@@ -249,7 +249,7 @@ fun CircleChart(
 
             player.updateLowHighPoints(minValue, maxValue)
             values.forEach { value ->
-                delay(500)
+                delay(700)
                 if (value == maxValue) {
                     isHeartVisible = true
                     isBrokenHeartVisible = false
@@ -259,7 +259,7 @@ fun CircleChart(
                 }
                 player.onPointFocused(1.0, value)
             }
-            delay(500)
+            delay(700)
             isHeartVisible = false
             isBrokenHeartVisible = false
 
@@ -274,7 +274,7 @@ fun CircleChart(
 
             player.updateLowHighPoints(minValue, maxValue)
             values.forEach { value ->
-                delay(500)
+                delay(700)
                 if (value == maxValue) {
                     isHeartVisible = true
                     isBrokenHeartVisible = false
@@ -284,7 +284,7 @@ fun CircleChart(
                 }
                 player.onPointFocused(1.0, value)
             }
-            delay(500)
+            delay(700)
             isHeartVisible = false
             isBrokenHeartVisible = false
 
