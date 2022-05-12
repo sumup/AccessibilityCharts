@@ -99,8 +99,10 @@ fun CircleChart(
 
                         updateLowHighPoints(minValue, maxValue)
                         runBlocking {
-                            delay(700L)
+                            delay(750L)
                             playSummaryAudio(benchmark, listOf(maxValue, minValue))
+                            delay(1000L)
+                            dispose()
                         }
                     }
                 },
