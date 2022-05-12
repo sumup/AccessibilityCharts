@@ -76,7 +76,7 @@ fun CircleChart(
     var values by remember {
         mutableStateOf(listOf(maxValue, minValue))
     }
-    
+
     Column(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Row {
             Column(
