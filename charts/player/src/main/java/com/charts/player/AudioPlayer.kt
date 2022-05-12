@@ -54,7 +54,7 @@ class AudioPlayer(
     private var currentY = 0.0
     private val soundIds = mutableListOf<Int>()
     private var soundPool: SoundPool? = SoundPool.Builder()
-        .setMaxStreams(6)
+        .setMaxStreams(7)
         .setAudioAttributes(
             AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
