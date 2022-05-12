@@ -102,7 +102,10 @@ fun BarChartScreen(
         val context = LocalContext.current
         LaunchedEffect(key1 = playSoundTimes) {
             val player = AudioPlayer(context)
-            player.updateLowHighPoints(values.minOrNull()?.toDouble() ?: 0.0, values.maxOrNull()?.toDouble() ?: 0.0)
+            player.updateLowHighPoints(
+                values.minOrNull()?.toDouble() ?: 0.0,
+                values.maxOrNull()?.toDouble() ?: 0.0
+            )
             withTooltip = false
             values.forEachIndexed { indexValue, value ->
                 delay(500)
@@ -210,7 +213,9 @@ fun Bar(
     onSelected: () -> Unit
 ) {
     val alpha by animateFloatAsState(targetValue = if (isSelected) 1f else 0f)
-    val color by animateColorAsState(targetValue = if (isSelected || isNothingSelected) Color.Black else Color.Gray)
+    val color by animateColorAsState(
+        targetValue = if (isSelected || isNothingSelected) Color.Black else Color(0xFFE6E6E6)
+    )
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
