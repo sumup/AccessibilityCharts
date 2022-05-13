@@ -62,7 +62,7 @@ fun LinearChartScreen(
                 .padding(8.dp)
                 .semantics {
                     contentDescription =
-                        "Line Chart with Today’s Sales. January 7th. 2022, total value of 7.000,00 €."
+                        "Line Chart with Today’s Sales. January, seventh. 2022, total value of seven thousand €."
                 }
         ) {
             Row(
@@ -119,11 +119,11 @@ fun LinearChartScreen(
                     .clickable {  }
                     .semantics {
                         contentDescription = """
-                            Sales on 05 hours, 1.000,00 €.
-                            Sales on 07 hours, 1.000,00 €.
-                            Sales on 12 hours, 3.000,00 €.
-                            Sales on 16 hours, 1.700,00 €.
-                            Sales on 20 hours, 1.700,00 €.
+                            Sales on 05 hours, one thousand €.
+                            Sales on 07 hours, one thousand €.
+                            Sales on 12 hours, three thousand €.
+                            Sales on 16 hours, a thousand, seven hundred €.
+                            Sales on 20 hours, a thousand, seven hundred €.
                         """.trimIndent()
                     }
                     .padding(16.dp)
