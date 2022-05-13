@@ -56,7 +56,7 @@ fun BarChartScreen(
                     .padding(start = 16.dp, top = 16.dp, bottom = 32.dp)
                     .semantics {
                         contentDescription =
-                            "Bar Chart with sales of the week, total value of 20.000,00 €. From January 1, 2022 to January 8, 2022."
+                            "Bar Chart with sales of the week, total value of twenty thousand €. From January 1, 2022 to January 8, 2022."
                     }) {
                 Column(Modifier.weight(1f)) {
                     Text(
@@ -135,6 +135,9 @@ fun BarChart(
     var tooltipValue by remember {
         mutableStateOf("")
     }
+    var contentDescription by remember {
+        mutableStateOf("")
+    }
 
     Box(
         Modifier
@@ -152,48 +155,56 @@ fun BarChart(
                 onIndexChange(0)
                 tooltipTitle = "January 2, 2022"
                 tooltipValue = "560,00 €"
+                contentDescription = "five hundred and sixty €"
             }
             Spacer(modifier = Modifier.width(24.dp))
             Bar("T", "Tuesday", maxValue, height, values[1], index == 1, index == -1) {
                 onIndexChange(1)
                 tooltipTitle = "January 3, 2022"
                 tooltipValue = "4.010,00 €"
+                contentDescription = "four thousand and ten €"
             }
             Spacer(modifier = Modifier.width(24.dp))
             Bar("W", "Wednesday", maxValue, height, values[2], index == 2, index == -1) {
                 onIndexChange(2)
                 tooltipTitle = "January 4, 2022"
                 tooltipValue = "7.400,00 €"
+                contentDescription = "seven thousand, four hundred €"
             }
             Spacer(modifier = Modifier.width(24.dp))
             Bar("T", "Thursday", maxValue, height, values[3], index == 3, index == -1) {
                 onIndexChange(3)
                 tooltipTitle = "January 5, 2022"
                 tooltipValue = "5.200,00 €"
+                contentDescription = "five thousand, two hundred €"
             }
             Spacer(modifier = Modifier.width(24.dp))
             Bar("F", "Friday", maxValue, height, values[4], index == 4, index == -1) {
                 onIndexChange(4)
                 tooltipTitle = "January 6, 2022"
                 tooltipValue = "7.499,00 €"
+                contentDescription = "seven thousand, four hundred and ninety-nine €"
             }
             Spacer(modifier = Modifier.width(24.dp))
             Bar("S", "Saturday", maxValue, height, values[5], index == 5, index == -1) {
                 onIndexChange(5)
                 tooltipTitle = "January 7, 2022"
                 tooltipValue = "3.600,00 €"
+                contentDescription = "three thousand, six hundred €"
             }
             Spacer(modifier = Modifier.width(24.dp))
             Bar("S", "Sunday", maxValue, height, values[6], index == 6, index == -1) {
                 onIndexChange(6)
                 tooltipTitle = "January 8, 2022"
                 tooltipValue = "2.510,30 €"
+                contentDescription = "two thousand, five hundred and ten € and third cents"
             }
         }
 
         BarTooltip(
             title = tooltipTitle,
             value = tooltipValue,
+            contentDescriptionValue = contentDescription,
             index = index,
             visible = index >= 0 && withTooltip,
             onDismissRequest = { onIndexChange(-1) }
@@ -257,6 +268,7 @@ fun Bar(
 fun BarTooltip(
     title: String,
     value: String,
+    contentDescriptionValue: String,
     index: Int,
     visible: Boolean,
     modifier: Modifier = Modifier,
@@ -281,7 +293,7 @@ fun BarTooltip(
         modifier = modifier
             .wrapContentSize()
             .clearAndSetSemantics {
-                contentDescription = "Sales on $title. Value of $value. Double tap to close."
+                contentDescription = "Sales on $title. Value of $contentDescriptionValue. Double tap to close."
             }
             .border(1.dp, color = Color.Black, shape = RoundedCornerShape(4.dp))
             .background(Color.White)
