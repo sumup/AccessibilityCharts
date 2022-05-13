@@ -119,11 +119,11 @@ fun LinearChartScreen(
                     .clickable {  }
                     .semantics {
                         contentDescription = """
-                            Sales on 05 hours, one thousand €.
-                            Sales on 07 hours, one thousand €.
-                            Sales on 12 hours, three thousand €.
-                            Sales on 16 hours, a thousand, seven hundred €.
-                            Sales on 20 hours, a thousand, seven hundred €.
+                            Sales at 5 am, one thousand €.
+                            Sales at 7 am, one thousand €.
+                            Sales at 12 pm, three thousand €.
+                            Sales at 16 pm, a thousand, seven hundred €.
+                            Sales at 20 pm, a thousand, seven hundred €.
                         """.trimIndent()
                     }
                     .padding(16.dp)
